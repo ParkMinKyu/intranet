@@ -4,6 +4,7 @@ Simple Intranet
 
 server start시 argument에 -Dniee.mode=real 추가
 /src/main/resources/config/ 폴더에 각종 설정파일들 수정
+/src/main/resources/sqlmap/E-R/ 폴더에 있는 mysql용 ERD를 이용하여 디비생성
 
 개발 시작일 : 2014-04-01
 개발 종료일 : 진행중
