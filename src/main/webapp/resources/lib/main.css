@@ -1,0 +1,61 @@
+@CHARSET "UTF-8";
+*{
+	font-family: "돋움";
+	font-size: 12px;
+}
+
+font{
+	font-weight: bold;
+}
+#schcalendar {
+	width: 900px;
+	margin: 0 auto;
+}
+.fc-sat { color:blue; }
+.fc-sun { color:red;  }
+div.etc-contents{
+	height: 100%;
+	font-size: 12px;
+	line-height: 15px;
+	margin-bottom: 10px;
+	position: relative;
+	min-height:350px;
+	display: inline-block;
+	text-align: left;
+	vertical-align: top;
+	-webkit-border-radius: 4px;
+	padding: 5px;
+	background-color: #eee;
+	border: 1px solid #c8c8c8;
+	margin: 10px;
+}
+
+p{
+	margin: 0;
+}
+
+div.main-container{
+	width: 1200px;
+	padding: 5px 5px 5px 5px;
+	margin: 0 auto;
+}
+
+div.clicked{
+	opacity:1 !important;
+}
+
+div.user-work{
+	float:right;
+	width: 780px;
+	display : none;
+}
+
+.contents-view{
+	min-width: 300px;
+	min-height: 300px;
+	padding: 5px;
+	max-height: 500px;
+	max-width: 800px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}

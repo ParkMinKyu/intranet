@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="scheduleArticle">
+	
+	<select id="getMaxSeq" resultType="int">
+		SELECT if(MAX(SEQ) is null,1,MAX(SEQ)) FROM SCHEDULE_VIEW
+	</select>
+	
+	<select id="getCount" resultType="int">
+		SELECT
+			COUNT(SEQ)
+		FROM SCHEDULE_VIEW
+		WHERE TO_DAYS(#{today}) BETWEEN TO_DAYS(STARTTIME) AND TO_DAYS(ENDTIME)
+		<if test="sText != null and sText != ''">
+			<if test="sType == 'title'">
+				AND TITLE LIKE CONCAT('%',#{sText}, '%') 
+			</if>
+			<if test="sType == 'contents'">
+				AND CONTENTS LIKE CONCAT('%',#{sText}, '%')
+			</if>
+			<if test="sType == 'writer'">
+				AND NAME LIKE CONCAT('%',#{sText}, '%')
+			</if>
+		</if> 
+	</select>
+	
+	<select id="getList" resultType="map">
+		SELECT
+			SEQ as seq,
+			EMAIL as email,
+			WRITER as writer,
+			TITLE as title,
+			CONTENTS as contents,
+			STARTTIME as starttime,
+			ENDTIME as endtime,
+			REGTIME as regtime,
+			UPTIME as uptime
+		FROM SCHEDULE_VIEW
+		WHERE (TO_DAYS(STARTTIME) BETWEEN TO_DAYS(#{sDay}) AND TO_DAYS(LAST_DAY(#{eDay})) OR TO_DAYS(ENDTIME) BETWEEN TO_DAYS(#{sDay}) AND TO_DAYS(LAST_DAY(#{eDay})) OR TO_DAYS(#{sDay}) BETWEEN TO_DAYS(STARTTIME) AND TO_DAYS(ENDTIME))
+		ORDER BY STARTTIME ASC
+	</select>
+
+	<select id="getSchedule" resultType="map">
+		SELECT
+			SEQ as seq,
+			EMAIL as email,
+			WRITER as writer,
+			TITLE as title,
+			CONTENTS as contents,
+			STARTTIME as starttime,
+			ENDTIME as endtime,
+			REGTIME as regtime,
+			UPTIME as uptime,
+			ETCYN as etcYn
+		FROM SCHEDULE_VIEW
+		WHERE SEQ = #{seq}
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO SCHEDULE
+			(
+			SEQ,
+			 WRITER,
+			TITLE,
+			CONTENTS,
+			STARTTIME,
+			ENDTIME,
+			ETC_YN,
+			REGTIME,
+			UPTIME
+			)
+		VALUES
+			(
+			#{seq},
+			#{writer},
+			#{title},
+			#{contents},
+			#{starttime},
+			#{endtime},
+			#{etcYn},
+			NOW(),
+			NOW()
+			)
+	</insert>
+	
+	<select id="getScheduleFiles" resultType="map">
+		SELECT 
+			SEQ as seq,
+			SCHEDULE_SEQ as scheduleSeq,
+			SUBNAME as subname,
+			REALNAME as realname,
+			REGTIME as regtime
+		FROM SCHEDULE_FILES
+		WHERE SCHEDULE_SEQ = #{seq}
+	</select>
+
+	<select id="getFile" resultType="map">
+		SELECT 
+			SEQ as seq,
+			SCHEDULE_SEQ as scheduleSeq,
+			SUBNAME as subname,
+			REALNAME as realname,
+			REGTIME as regtime
+		FROM SCHEDULE_FILES
+		WHERE SEQ = #{seq}
+	</select>
+	
+	<insert id="insertFile">
+		INSERT INTO SCHEDULE_FILES
+			(
+			SCHEDULE_SEQ,
+			SUBNAME,
+			REALNAME,
+			REGTIME
+			)
+		VALUES
+			(
+			#{scheduleSeq},
+			#{subname},
+			#{realname},
+			NOW()
+			)
+	</insert>
+	
+	<delete id="deleteFiles">
+		DELETE FROM SCHEDULE_FILES
+		WHERE SCHEDULE_SEQ = #{seq}
+	</delete>
+
+	<delete id="deleteScheduleFiles">
+		DELETE FROM SCHEDULE_FILES
+		WHERE SUBNAME = #{name}
+	</delete>
+	
+	<delete id="delete">
+		DELETE FROM SCHEDULE
+		WHERE SEQ = #{seq}
+		AND WRITER = #{writer}
+	</delete>
+	
+	<update id="update">
+		UPDATE SCHEDULE
+		SET TITLE = #{title},
+			CONTENTS = #{contents},
+			STARTTIME = #{starttime},
+			ENDTIME = #{endtime},
+			ETC_YN = #{etcYn},
+			UPTIME = NOW()
+		WHERE SEQ = #{seq}
+		AND WRITER = #{writer}
+	</update>
+</mapper>

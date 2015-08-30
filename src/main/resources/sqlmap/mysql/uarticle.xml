@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="userArticle">
+	
+	<select id="getList" resultType="map">
+		SELECT 
+			SEQ as seq,
+			VIEW_YN as viewYn,
+			WRITER as writer,
+			RECEIVER as receiver,
+			RECEIVERNAME as receivername,
+			NAME as name,
+			TITLE as title,
+			CONTENTS as contents,
+			REGTIME as regtime,
+			UPTIME as uptime
+		FROM USERARTICLE_VIEW
+		WHERE (WRITER = #{email} OR RECEIVER = #{email})
+		<if test="sText != null and sText != ''">
+			<if test="sType == 'title'">
+				AND TITLE LIKE CONCAT('%',#{sText}, '%') 
+			</if>
+			<if test="sType == 'contents'">
+				AND CONTENTS LIKE CONCAT('%',#{sText}, '%')
+			</if>
+			<if test="sType == 'writer'">
+				AND NAME LIKE CONCAT('%',#{sText}, '%')
+			</if>
+			<if test="sType == 'receiver'">
+				AND RECEIVERNAME LIKE CONCAT('%',#{sText}, '%')
+			</if>
+		</if> 
+		ORDER BY SEQ DESC
+		limit #{startRow},15
+	</select>
+	
+	<select id="getMaxSeq" resultType="int">
+		SELECT if(MAX(SEQ) is null,1,MAX(SEQ)) FROM USERARTICLE
+	</select>
+
+	<select id="getArticle" resultType="map">
+		SELECT 
+			SEQ as seq,
+			VIEW_YN as viewYn,
+			WRITER as writer,
+			RECEIVER as receiver,
+			RECEIVERNAME as receivername,
+			NAME as name,
+			TITLE as title,
+			CONTENTS as contents,
+			REGTIME as regtime,
+			UPTIME as uptime
+		FROM USERARTICLE_VIEW
+		WHERE SEQ = #{seq}
+	</select>
+
+	<select id="getCount" resultType="int">
+		SELECT COUNT(SEQ)
+		FROM USERARTICLE_VIEW
+		WHERE (WRITER = #{email} OR RECEIVER = #{email})
+		<if test="sText != null and sText != ''">
+			<if test="sType == 'title'">
+				AND TITLE LIKE CONCAT('%',#{sText}, '%') 
+			</if>
+			<if test="sType == 'contents'">
+				AND CONTENTS LIKE CONCAT('%',#{sText}, '%')
+			</if>
+			<if test="sType == 'writer'">
+				AND NAME LIKE CONCAT('%',#{sText}, '%')
+			</if>
+			<if test="sType == 'receiver'">
+				AND RECEIVERNAME LIKE CONCAT('%',#{sText}, '%')
+			</if>
+		</if>
+	</select>
+	
+	<select id="getUserFiles" resultType="map">
+		SELECT 
+		SEQ as seq,
+		USERARTICLE_SEQ as userarticleseq,
+		SUBNAME as subname,
+		REALNAME as realname,
+		REGTIME as regtime
+	FROM USER_FILES
+	WHERE USERARTICLE_SEQ = #{seq}
+	</select>
+
+	<select id="getFile" resultType="map">
+		SELECT 
+		SEQ as seq,
+		USERARTICLE_SEQ as userarticleseq,
+		SUBNAME as subname,
+		REALNAME as realname,
+		REGTIME as regtime
+	FROM USER_FILES
+	WHERE SEQ = #{seq}
+	</select>
+	
+	<update id="update">
+		UPDATE USERARTICLE
+		SET VIEW_YN = 'Y'
+		WHERE SEQ = #{seq}
+	</update>
+	
+	<insert id="insert">
+		INSERT INTO USERARTICLE
+			(
+			SEQ,
+			WRITER,
+			RECEIVER,
+			VIEW_YN,
+			TITLE,
+			CONTENTS,
+			REGTIME,
+			UPTIME
+			)
+		VALUES
+			(
+			#{seq},
+			#{writer},
+			#{receiver},
+			'N',
+			#{title},
+			#{contents},
+			NOW(),
+			NOW()
+			)
+	</insert>
+
+	<insert id="insertFile">
+		INSERT INTO USER_FILES
+			(
+			USERARTICLE_SEQ,
+			SUBNAME,
+			REALNAME,
+			REGTIME
+			)
+		VALUES
+			(
+			#{userseq},
+			#{subname},
+			#{realname},
+			NOW()
+			)
+	</insert>
+</mapper>

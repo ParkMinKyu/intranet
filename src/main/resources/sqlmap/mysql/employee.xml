@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="employee">
+	
+	<select id="getUser" resultType="map">
+		SELECT
+			EMAIL as email,
+			NAME as name,
+			LEVEL as level,
+			PHONE as phone,
+			PASSWD as passwd,
+			REGTIME as regtime
+		FROM EMPLOYEE
+		WHERE EMAIL = #{email}
+	</select>
+	
+	<update id="passwdChange">
+		UPDATE EMPLOYEE
+		SET PASSWD = #{passwd}
+		WHERE EMAIL = #{email}
+	</update>
+	
+	<select id="getList" resultType="map">
+		SELECT
+			EMAIL as email,
+			NAME as name,
+			LEVEL as level,
+			PHONE as phone,
+			PASSWD as passwd,
+			REGTIME as regtime
+		FROM EMPLOYEE
+		ORDER BY LEVEL ASC, NAME ASC
+	</select>
+	
+	<insert id="addEmployee">
+		INSERT INTO EMPLOYEE
+				(
+				EMAIL,
+				NAME,
+				LEVEL,
+				PHONE,
+				PASSWD,
+				REGTIME
+				)
+			VALUES
+				(
+				#{email},
+				#{name},
+				3,
+				#{phone},
+				#{passwd},
+				NOW()
+			)
+	</insert>
+</mapper>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="file">
+	
+	<select id="getList" resultType="map">
+		SELECT 
+			SEQ as seq,
+			EMAIL as email,
+			NAME as name,
+			REGTIME as regtime,
+			SUBNAME as subname,
+			REALNAME as realname
+		FROM FILES_VIEW
+		ORDER BY SEQ DESC
+	</select>
+
+	<select id="getFile" resultType="map">
+		SELECT 
+			SEQ as seq,
+			EMAIL as email,
+			NAME as name,
+			REGTIME as regtime,
+			SUBNAME as subname,
+			REALNAME as realname
+		FROM FILES_VIEW
+		WHERE SEQ = #{seq}
+	</select>
+
+	<insert id="insert">
+		INSERT INTO FILES
+			(
+			 EMAIL,
+			REGTIME,
+			SUBNAME,
+			REALNAME
+			)
+		VALUES
+			(
+			#{email},
+			NOW(),
+			#{subname},
+			#{realname}
+			)
+	</insert>	
+	
+	<delete id="delete">
+		DELETE FROM FILES
+		WHERE SEQ = #{seq}
+	</delete>
+</mapper>
