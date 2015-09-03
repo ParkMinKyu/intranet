@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class DefaultEncryptor {
     	
     	private String getNieeSecurity(){
-    	    return System.getProperty("niee.security");
+    	    return System.getProperty("niee.security") == null ? "niee.security" : System.getProperty("niee.security");
     	}
 	
 	public String encode(String str){

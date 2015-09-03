@@ -96,7 +96,7 @@ $(function(){
 				width : 600,
 				height: 500,
 				isLine : true,
-				title : 'niee@urielsoft.co.kr',
+				title : 'niee@naver.co.kr',
 				titleSize : 10,
 				lineCount : 5,
 				isTooltip : false,
@@ -123,7 +123,12 @@ $(function(){
 	$('#sessionBtn').click(function(){
 		if(sessionCheker == null){
 			sessionCheker = setInterval(function(){
-				$.ajax({url : getContextPath()+'/user/session.do',success:function(response){console.log(response.locale);}});
+				$.ajax({
+					url : getContextPath()+'/user/session.do',
+					success:function(response){
+						console.log(JSON.parse(response).locale);
+						}
+				});
 			},(1000*60*5));
 			sessionCheker;
 			$("#sessionBtn").removeClass('btn-gray');
@@ -181,11 +186,9 @@ $(function(){
 			var realnames = '';
 			var subnames = '';
 			$('#schedulefileName').find('span').each(function(){
-				if($(this).attr('realname')!='' && $(this).attr('realname')!=null && $(this).attr('realname')!='undefined' ){
+				if($(this).attr('realname')!='' && $(this).attr('realname')!=null && $(this).attr('realname')!='undefined' && $(this).attr('subname')!='' && $(this).attr('subname')!=null && $(this).attr('subname')!='undefined'){
 					realnames += $(this).attr('realname');
 					realnames +=',';
-				}
-				if($(this).attr('subname')!='' && $(this).attr('subname')!=null && $(this).attr('subname')!='undefined'){
 					subnames += $(this).attr('subname');
 					subnames +=',';
 				}
