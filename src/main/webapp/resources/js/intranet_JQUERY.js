@@ -20,7 +20,7 @@ $(function(){
 			type : 'post',
 			data : {email : $('#user-email').val(),name : $('#user-name').val(),phone : $('#user-phone').val()},
 			success : function(response){
-				alert(response.msg);
+				alert(JSON.parse(response).msg);
 				$('#user-email').val('');
 				$('#user-name').val('');
 				$('#user-phone').val('');
@@ -414,7 +414,7 @@ $(function(){
 				data : {title:title,contents:contents,isSend:isSend,email:$('#selectUser').val(),realnames:realnames,subnames:subnames,ccs:ccs},
 				type : 'post',
 				success : function(response){
-					alert(response.msg);
+					alert(JSON.parse(response).msg);
 					refrashRow(userArticle, {param:{page : 1, email : $('#selectUser').val()}, url: getContextPath()+'/home/userArticle.do'});
 					mailModal.hide();
 					$('iframe[id!=scheduleFrame]').remove();

@@ -275,9 +275,12 @@
 			<i class="icon-home"></i>업무 시스템(&nbsp;<span id="head-year"></span>년&nbsp;<span id="head-month"></span>월&nbsp;<span id="head-day"></span>일&nbsp;<span id="head-hour"></span>시&nbsp;<span id="head-min"></span>분&nbsp;)
 			<a class="btn btn-mini btn-gray-black" style="width: 70px;" id="btnLogout"><span>logout</span><i class="icon-upload icon-edge"></i></a>
 			<a class="btn btn-gray btn-small" id="sessionBtn"><span id="sessionText">세션유지(꺼짐)</span><i class="icon-gear"></i></a>
-			<a class="btn btn-mini btn-gray-black" style="float:right" id="changePasswd">
-				<span>비밀번호 변경</span>&nbsp;<i class="icon-refresh"></i>
-			</a>
+			<c:if test="${sessionScope.userInfo != 'guest'}">
+				<a class="btn btn-mini btn-gray-black" style="float:right" id="changePasswd">
+					<span>비밀번호 변경</span>&nbsp;<i class="icon-refresh"></i>
+				</a>
+			</c:if>
+			
 			<c:if test="${sessionScope.isAdmin}">
 				<a class="btn btn-mini btn-gray-black" style="float:right" id="addEmployee">
 					<span>사용자 추가</span>&nbsp;<i class="icon-gear"></i>

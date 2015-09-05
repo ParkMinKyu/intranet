@@ -92,9 +92,6 @@ public class UserController {
 	    userMap.put("isLogin", false);
 	    userMap.put("msg", "메일주소를 입력하세요.");
 	} else {
-	    if (email.indexOf("@") == -1) {
-		email += "@asianaidt.com";
-	    }
 	    paramMap.put("email", email);
 	    userMap = userService.getUser(paramMap);
 	    if (passwd.equals(userMap.get("passwd"))) {

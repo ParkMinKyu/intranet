@@ -353,12 +353,12 @@ function changePasswd(){
 			data : {oldpass:oldpass,newpass:newpass},
 			type : 'post',
 			success:function(response){
-				var result = response;
+				var result = JSON.parse(response);
 				if(result.success){
-					alert(response.msg);
+					alert(result.msg);
 					passwdModal.hide();
 				}else{
-					alert(response.msg);
+					alert(result.msg);
 					$('#oldpass').val('');
 					$('#newpass').val('');
 					$('#oldpass').focus();

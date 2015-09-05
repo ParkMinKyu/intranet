@@ -723,6 +723,7 @@ public class HomeController {
 	    }
 	} catch (Exception e) {
 	    // TODO Auto-generated catch block
+	    e.printStackTrace();
 	    paramMap.put("error", "10MB 이하의 파일만 업로드 가능합니다.");
 	    return paramMap;
 	}

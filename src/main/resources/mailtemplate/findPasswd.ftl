@@ -13,7 +13,7 @@
 			<div class="body" style="background-color: #fff;border: 1px solid #dcdcdc;padding: 15px;overflow: auto;text-overflow: clip;white-space: normal;-webkit-border-bottom-left-radius: 5px;-moz-border-radius-bottomleft: 5px;border-bottom-left-radius: 5px;-webkit-border-bottom-right-radius: 5px;-moz-border-radius-bottomright: 5px;border-bottom-right-radius: 5px;">
 				${name}(${email})님의 비밀번호가<br>
 				<font color="red">${passwd}</font>로 변경 되었습니다.<br>
-				<a href="http://116.84.12.57:8080/uriel/user/loginPage.do">사이트 바로가기</a>
+				<a href="http://niee.kr/intranet/user/loginPage.do">사이트 바로가기</a>
 			</div>
 		</div>
 	</div>

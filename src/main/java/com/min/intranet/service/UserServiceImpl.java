@@ -55,9 +55,6 @@ public class UserServiceImpl extends SqlSessionDaoSupport implements UserService
 		if(StringUtils.isEmpty(email) || StringUtils.isEmpty(name) || StringUtils.isEmpty(phone)){
 			return 0;
 		}else{
-			if(email.indexOf("@")==-1){
-				email += "@naver.com";
-			}
 			paramMap.put("email", encryptor.base64Encoding(email));
 			paramMap.put("phone", encryptor.base64Encoding(phone));
 			if(paramMap.containsKey("passwd")){

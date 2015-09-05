@@ -8,7 +8,7 @@ server start시 argument에 -Dniee.mode=real 추가<br>
 
 개발 시작일 : 2014-04-01
 개발 종료일 : 진행중
-테스트
+URL접속 후 guest/123456 으로 테스트 가능
 
 사용된 라이브러리
 Spring 3.14

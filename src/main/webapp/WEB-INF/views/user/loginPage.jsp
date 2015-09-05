@@ -29,6 +29,9 @@ $(function(){
 				}else{
 					alert(result.msg);
 				}
+			},
+			error:function(response){
+				console.log(response);
 			}
 		});
 	});
