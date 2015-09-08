@@ -257,27 +257,6 @@ $(function(){
 	                	var color;
 	                	var textColor;
 	                	var borderColor;
-	                	if(response[i].writer == '박민규'){
-	                		color = '#98C6DD';
-	                        textColor = 'black';
-	                        borderColor = '#645454';
-	                	}else if(response[i].writer == '이대선'){
-	                		color = '#2FA025';
-	                        textColor = 'white';
-	                        borderColor = '#22292C';
-	                	}else if(response[i].writer == '이규훈'){
-	                		color = '#D5E660';
-	                        textColor = 'black';
-	                        borderColor = '#22292C';
-	                	}else if(response[i].writer == '전지현'){
-	                		color = '#7DE08D';
-	                        textColor = 'black';
-	                        borderColor = '#22292C';
-	                	}else if(response[i].writer == '김명준'){
-	                		color = '#556369';
-	                        textColor = 'white';
-	                        borderColor = '#22292C';
-	                	}
 	                	events.push({
 	                        title: response[i].title,
 	                        start: new Date(response[i].starttime),

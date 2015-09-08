@@ -30,11 +30,8 @@
 			EMAIL as email,
 			WRITER as writer,
 			TITLE as title,
-			CONTENTS as contents,
 			STARTTIME as starttime,
-			ENDTIME as endtime,
-			REGTIME as regtime,
-			UPTIME as uptime
+			ENDTIME as endtime
 		FROM SCHEDULE_VIEW
 		WHERE (TO_DAYS(STARTTIME) BETWEEN TO_DAYS(#{sDay}) AND TO_DAYS(LAST_DAY(#{eDay})) OR TO_DAYS(ENDTIME) BETWEEN TO_DAYS(#{sDay}) AND TO_DAYS(LAST_DAY(#{eDay})) OR TO_DAYS(#{sDay}) BETWEEN TO_DAYS(STARTTIME) AND TO_DAYS(ENDTIME))
 		ORDER BY STARTTIME ASC

@@ -91,13 +91,9 @@ public class HomeServiceImpl extends SqlSessionDaoSupport implements HomeService
 		
 		for(Map<String, String> map : scheduleArticle){
 			String title = map.get("title");
-			String contents = map.get("contents");
 			title = title.replaceAll("<script>","&lt;script&gt;");
 			title = title.replaceAll("</script>","&lt;/script&gt;");
-			contents = contents.replaceAll("<script>","&lt;script&gt;");
-			contents = contents.replaceAll("</script>","&lt;/script&gt;");
 			map.put("title",title);
-			map.put("contents",contents);
 		}
 		
 		return scheduleArticle.size()==0?new ArrayList<Map<String,String>>():scheduleArticle;
