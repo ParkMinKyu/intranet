@@ -85,6 +85,7 @@ public class UserController {
 	    session.setAttribute(CommonUtil.SESSION_USER,adminEmail);
 	    session.setAttribute("isAdmin",true);
 	    userMap.put("isLogin", true);
+	    userMap.put("passwd","");
 	    return userMap;
 	}
 	
@@ -103,6 +104,7 @@ public class UserController {
 		userMap.put("msg", "입력하신 정보가 일치하지 않습니다.");
 	    }
 	}
+	userMap.put("passwd","");
 	return userMap;
     }
 
