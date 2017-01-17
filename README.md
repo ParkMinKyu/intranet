@@ -6,6 +6,17 @@
 
 ### server start시 argument에 -Dniee.mode=real 추가<br>
 ### 암호화 모듈 사용시 argument에 -Dniee.security=password 추가<br>
+### properties value 지정시 ENC(암호화된 String)<br>
+### properties 암호화될 String 생성 방법 <br>
+```java
+public static void main(String[] args) {
+		StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
+		encryptor.setPassword("niee.security value");
+		String password = encryptor.encrypt("test");
+		System.out.println(password);
+		System.out.println(encryptor.decrypt(password));
+	}
+```
 ### /src/main/resources/config/ 폴더에 각종 설정파일들 수정<br>
 ### /src/main/resources/sqlmap/E-R/ 폴더에 있는 mysql용 ERD를 이용하여 디비생성<br>
 
