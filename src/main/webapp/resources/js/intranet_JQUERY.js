@@ -181,11 +181,12 @@ $(function(){
 			var realnames = '';
 			var subnames = '';
 			$('#schedulefileName').find('span').each(function(){
-				if($(this).attr('realname')!='' && $(this).attr('realname')!=null && $(this).attr('realname')!='undefined' ){
+				var isRealName = ($(this).attr('realname')!='' && $(this).attr('realname')!=null && $(this).attr('realname')!='undefined');
+				if( isRealName ){
 					realnames += $(this).attr('realname');
 					realnames +=',';
 				}
-				if($(this).attr('subname')!='' && $(this).attr('subname')!=null && $(this).attr('subname')!='undefined'){
+				if(isRealName && $(this).attr('subname')!='' && $(this).attr('subname')!=null && $(this).attr('subname')!='undefined'){
 					subnames += $(this).attr('subname');
 					subnames +=',';
 				}
