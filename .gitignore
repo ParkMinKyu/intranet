@@ -8,3 +8,5 @@
 out/
 src/test/
 target/
+.DS_Store
+/files
