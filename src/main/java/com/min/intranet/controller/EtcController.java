@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.min.intranet.service.HomeService;
+import com.min.intranet.service.EtcService;
 
 @Controller
 @RequestMapping("/home")
@@ -24,7 +24,7 @@ public class EtcController {
 	private static final Logger logger = LoggerFactory.getLogger(EtcController.class);
 
 	@Autowired
-	private HomeService homeService;
+	private EtcService etcService;
 
 	/**
 	 * Simply selects the home view to render by returning its name.
@@ -41,7 +41,7 @@ public class EtcController {
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("sDay", syear + "/" + smonth + "/01");
 		paramMap.put("eDay", eyear + "/" + emonth + "/01");
-		List<Map<String, String>> etcMap = homeService.getEtcList(paramMap);
+		List<Map<String, String>> etcMap = etcService.getEtcList(paramMap);
 
 		return etcMap;
 	}
@@ -57,7 +57,7 @@ public class EtcController {
 		logger.info("Welcome getUserFiles! The client locale is {}.", locale);
 
 		Map<String, String> paramMap = new HashMap<String, String>();
-		List<Map<String, String>> chartList = homeService.getChart(paramMap);
+		List<Map<String, String>> chartList = etcService.getChart(paramMap);
 
 		return chartList;
 	}

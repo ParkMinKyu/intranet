@@ -32,7 +32,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.min.intranet.core.CommonUtil;
 import com.min.intranet.core.SendMailService;
-import com.min.intranet.service.HomeService;
+import com.min.intranet.service.EmployeeService;
 
 @Controller
 @RequestMapping("/home")
@@ -46,7 +46,7 @@ public class EmployeeController {
 	private String imageDir;
 
 	@Autowired
-	private HomeService homeService;
+	private EmployeeService employeeService;
 
 	@Autowired
 	private SendMailService sendMailService;
@@ -65,7 +65,7 @@ public class EmployeeController {
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("seq", seq);
 
-		List<Map<String, String>> company = homeService.getCmpanyList(paramMap);
+		List<Map<String, String>> company = employeeService.getCmpanyList(paramMap);
 
 		return company;
 	}
@@ -84,7 +84,7 @@ public class EmployeeController {
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("seq", seq);
 
-		List<Map<String, String>> department = homeService.getDepartmentList(paramMap);
+		List<Map<String, String>> department = employeeService.getCmpanyList(paramMap);
 
 		return department;
 	}
@@ -102,7 +102,7 @@ public class EmployeeController {
 
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("seq", seq);
-		List<Map<String, String>> employee = homeService.getEmployeeList(paramMap);
+		List<Map<String, String>> employee = employeeService.getEmployeeList(paramMap);
 
 		return employee;
 	}
@@ -134,11 +134,11 @@ public class EmployeeController {
 		paramMap.put("sText", sText);
 		paramMap.put("email", email);
 
-		List<Map<String, String>> userArticle = homeService.getUserArticles(paramMap);
+		List<Map<String, String>> userArticle = employeeService.getUserArticles(paramMap);
 
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
-		resultMap.put("count", homeService.getUserArticlesCount(paramMap));
+		resultMap.put("count", employeeService.getUserArticlesCount(paramMap));
 		resultMap.put("page", page);
 		resultMap.put("articles", userArticle);
 
@@ -158,10 +158,10 @@ public class EmployeeController {
 
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("seq", seq);
-		Map<String, String> article = homeService.getArticle(paramMap);
+		Map<String, String> article = employeeService.getArticle(paramMap);
 		String user = (String) req.getSession().getAttribute(CommonUtil.SESSION_USER);
 		if (article.get("receiver").equals(user)) {
-			homeService.updateArticle(paramMap);
+			employeeService.updateArticle(paramMap);
 		}
 		return article;
 	}
@@ -186,13 +186,13 @@ public class EmployeeController {
 		StringTokenizer subname = new StringTokenizer(subnames, ",");
 		StringTokenizer cclist = new StringTokenizer(ccs, ",");
 
-		int seq = homeService.getMaxSeq();
+		int seq = employeeService.getMaxSeq();
 		paramMap.put("seq", "" + (seq + 1));
 		paramMap.put("writer", writer);
 		paramMap.put("receiver", email);
 		paramMap.put("title", title);
 		paramMap.put("contents", contents);
-		resultMap.put("resultCnt", homeService.userArticleWrite(paramMap));
+		resultMap.put("resultCnt", employeeService.userArticleWrite(paramMap));
 		resultMap.put("msg", "등록 되었습니다.");
 		while (realname.hasMoreElements() && subname.hasMoreElements()) {
 			Map<String, String> fileMap = new HashMap<String, String>();
@@ -201,20 +201,20 @@ public class EmployeeController {
 			fileMap.put("userseq", "" + (seq + 1));
 			fileMap.put("realname", rname);
 			fileMap.put("subname", sname);
-			int cnt = homeService.userFileWrite(fileMap);
+			int cnt = employeeService.userFileWrite(fileMap);
 			if (cnt == 0)
 				resultMap.put("msg", "파일 등록 실패");
 		}
 
 		while (cclist.hasMoreElements()) {
 			String cc = cclist.nextToken();
-			seq = homeService.getMaxSeq();
+			seq = employeeService.getMaxSeq();
 			paramMap.put("seq", "" + (seq + 1));
 			paramMap.put("writer", writer);
 			paramMap.put("receiver", cc);
 			paramMap.put("title", title);
 			paramMap.put("contents", contents);
-			resultMap.put("resultCnt", homeService.userArticleWrite(paramMap));
+			resultMap.put("resultCnt", employeeService.userArticleWrite(paramMap));
 			resultMap.put("msg", "등록 되었습니다.");
 			realname = new StringTokenizer(realnames, ",");
 			subname = new StringTokenizer(subnames, ",");
@@ -225,7 +225,7 @@ public class EmployeeController {
 				fileMap.put("userseq", "" + (seq + 1));
 				fileMap.put("realname", rname);
 				fileMap.put("subname", sname);
-				int cnt = homeService.userFileWrite(fileMap);
+				int cnt = employeeService.userFileWrite(fileMap);
 				if (cnt == 0)
 					resultMap.put("msg", "파일 등록 실패");
 			}
@@ -270,7 +270,7 @@ public class EmployeeController {
 
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("seq", seq);
-		List<Map<String, String>> fileList = homeService.getUserFiles(paramMap);
+		List<Map<String, String>> fileList = employeeService.getUserFiles(paramMap);
 
 		return fileList;
 	}
@@ -286,7 +286,7 @@ public class EmployeeController {
 
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("seq", seq);
-		Map<String, String> fileMap = homeService.getUserFile(paramMap);
+		Map<String, String> fileMap = employeeService.getUserFile(paramMap);
 		return new ModelAndView("fileDownloadView", "downloadFile", fileMap);
 	}
 

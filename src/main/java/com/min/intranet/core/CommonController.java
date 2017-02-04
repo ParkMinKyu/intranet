@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.min.intranet.service.HomeService;
+import com.min.intranet.service.ScheduleService;
 
 @Controller
 @RequestMapping("/common")
@@ -23,7 +23,7 @@ public class CommonController {
 	private static final Logger logger = LoggerFactory.getLogger(CommonController.class);
 	
 	@Resource(name = "homeService")
-	private HomeService homeService;
+	private ScheduleService homeService;
 	
 	@RequestMapping(value = "error.do", method = RequestMethod.GET)
 	public String common(Model model, @RequestParam("error")String code){

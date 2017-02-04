@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.min.intranet.core.CommonUtil;
-import com.min.intranet.service.HomeService;
+import com.min.intranet.service.ScheduleService;
 
 @Controller
 @RequestMapping("/home")
@@ -43,7 +43,7 @@ public class ScheduleController {
 	private String imageDir;
 
 	@Autowired
-	private HomeService homeService;
+	private ScheduleService homeService;
 
 	@RequestMapping(value = "scheduleFileDelete.do", method = RequestMethod.POST)
 	@ResponseBody

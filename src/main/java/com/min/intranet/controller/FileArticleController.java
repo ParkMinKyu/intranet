@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.min.intranet.core.CommonUtil;
-import com.min.intranet.service.HomeService;
+import com.min.intranet.service.FileService;
 
 @Controller
 @RequestMapping("/home")
@@ -41,7 +41,7 @@ public class FileArticleController {
 	private String imageDir;
 
 	@Autowired
-	private HomeService homeService;
+	private FileService fileService;
 
 	/**
 	 * Simply selects the home view to render by returning its name.
@@ -54,7 +54,7 @@ public class FileArticleController {
 		logger.info("Welcome getFiles! The client locale is {}.", locale);
 
 		Map<String, String> paramMap = new HashMap<String, String>();
-		List<Map<String, String>> fileList = homeService.getFileList(paramMap);
+		List<Map<String, String>> fileList = fileService.getFileList(paramMap);
 
 		return fileList;
 	}
@@ -101,7 +101,7 @@ public class FileArticleController {
 			}
 		}
 
-		resultMap.put("successCnt", homeService.fileWrite(paramMap));
+		resultMap.put("successCnt", fileService.fileWrite(paramMap));
 		return resultMap;
 	}
 
@@ -116,7 +116,7 @@ public class FileArticleController {
 
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("seq", seq);
-		Map<String, String> fileMap = homeService.getFile(paramMap);
+		Map<String, String> fileMap = fileService.getFile(paramMap);
 		return new ModelAndView("fileDownloadView", "downloadFile", fileMap);
 	}
 
@@ -134,7 +134,7 @@ public class FileArticleController {
 		String email = (String) req.getSession().getAttribute(CommonUtil.SESSION_USER);
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("seq", seq);
-		Map<String, String> fileMap = homeService.getFile(paramMap);
+		Map<String, String> fileMap = fileService.getFile(paramMap);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("success", false);
 		resultMap.put("msg", "등록자만 삭제 할 수 있습니다.");
@@ -143,7 +143,7 @@ public class FileArticleController {
 			if (file.isFile()) {
 				boolean isDel = file.delete();
 				if (isDel) {
-					int cnt = homeService.deleteFile(paramMap);
+					int cnt = fileService.deleteFile(paramMap);
 					resultMap.put("cnt", cnt);
 					resultMap.put("success", true);
 					resultMap.put("msg", "삭제되었습니다.");
