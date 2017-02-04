@@ -22,8 +22,8 @@ import com.min.intranet.service.ScheduleService;
 public class CommonController {
 	private static final Logger logger = LoggerFactory.getLogger(CommonController.class);
 	
-	@Resource(name = "homeService")
-	private ScheduleService homeService;
+	@Resource(name = "scheduleService")
+	private ScheduleService scheduleService;
 	
 	@RequestMapping(value = "error.do", method = RequestMethod.GET)
 	public String common(Model model, @RequestParam("error")String code){
@@ -42,7 +42,7 @@ public class CommonController {
 		
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("seq", seq);
-		Map<String, String> schedule = homeService.getSchedule(paramMap);
+		Map<String, String> schedule = scheduleService.getSchedule(paramMap);
 		model.addAttribute("schedule", schedule);
 		return "common/scheduleView";
 	}

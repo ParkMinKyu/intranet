@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.min.intranet.core.DefaultEncryptor;
 
-@Service(value = "homeService")
+@Service(value = "scheduleService")
 @Transactional
 public class ScheduleServiceImpl extends SqlSessionDaoSupport implements ScheduleService {
 
