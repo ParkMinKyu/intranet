@@ -150,7 +150,7 @@ function getFiles(){
 		var result = response;
 		var article = new Array();
 		for(var i = 0 ; i < result.length ; i ++){
-			var date = new Date(result[i].regtime);
+			var date = new Date(result[i].regtime.replace(/\-/g,"/"));
 			var obj = { seq : result[i].seq, realname : result[i].realname, regtime : date.getFullYear() + "년 " + (date.getMonth()+1) + "월 " + date.getDate() + "일", name : result[i].name};
 			article.push(obj);
 		}
@@ -480,7 +480,8 @@ function refrashRow(table, param){
 			}).click(function(){
 				var url = "";
 				if(userArticle.selector == table.selector){
-					url = getContextPath()+"/home/getArticle.do";
+					url = getContextPath()+"/home/" +
+							"";
 				}else if(scheduleArticle.selector == table.selector){
 					url = getContextPath()+"/home/getSchedule.do";
 				}
