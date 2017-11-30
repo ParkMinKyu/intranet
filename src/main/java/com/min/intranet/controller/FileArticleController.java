@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.min.intranet.core.CommonUtil;
 import com.min.intranet.service.FileService;
 
 @Controller
@@ -66,7 +66,7 @@ public class FileArticleController {
 	 */
 	@RequestMapping(value = "fileUpload.do", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Integer> fileUpload(Locale locale, Model model, HttpServletRequest req, HttpServletResponse res)
+	public Map<String, Integer> fileUpload(Locale locale, Model model, Authentication auth, HttpServletRequest req, HttpServletResponse res)
 			throws Exception {
 		logger.info("Welcome fileUpload! The client locale is {}.", locale);
 		Map<String, String> paramMap = new HashMap<String, String>();
@@ -91,7 +91,7 @@ public class FileArticleController {
 				if (item.getName() != null && !item.getName().equals("")) {
 					String subname = UUID.randomUUID().toString();
 					paramMap.put("realname", item.getName());
-					paramMap.put("email", (String) req.getSession().getAttribute(CommonUtil.SESSION_USER));
+					paramMap.put("email", auth.getName());
 					paramMap.put("subname", subname);
 					System.out.println(fileDir + subname);
 					File file = new File(fileDir + subname);
@@ -127,11 +127,11 @@ public class FileArticleController {
 	 */
 	@RequestMapping(value = "filedelete.do", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> filedelete(Locale locale, Model model, HttpServletRequest req,
+	public Map<String, Object> filedelete(Locale locale, Model model, HttpServletRequest req,Authentication auth,
 			@RequestParam("seq") String seq) throws Exception {
 		logger.info("Welcome filedelete! The client locale is {}.", locale);
 
-		String email = (String) req.getSession().getAttribute(CommonUtil.SESSION_USER);
+		String email = auth.getName();
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("seq", seq);
 		Map<String, String> fileMap = fileService.getFile(paramMap);

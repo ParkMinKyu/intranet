@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.mybatis.spring.support.SqlSessionDaoSupport;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -19,6 +20,9 @@ public class UserServiceImpl extends SqlSessionDaoSupport implements UserService
 	@Resource(name = "defaultEncryptor")
 	private DefaultEncryptor encryptor;
 	
+	@Resource(name = "passwordEncoder")
+	private ShaPasswordEncoder passwordEncoderService;
+	
 	@Override
 	public Map<String, Object> getUser(Map<String, String> paramMap)throws Exception {
 		// TODO Auto-generated method stub
@@ -31,7 +35,7 @@ public class UserServiceImpl extends SqlSessionDaoSupport implements UserService
 			String dbemail = (String) resultMap.get("email");
 			String passwd = (String) resultMap.get("passwd");
 			resultMap.put("email",encryptor.base64Decoding(dbemail));
-			resultMap.put("passwd",encryptor.decode(passwd));
+			resultMap.put("passwd",passwordEncoderService.encodePassword(passwd, null));
 		}
 		return resultMap;
 	}
@@ -42,7 +46,7 @@ public class UserServiceImpl extends SqlSessionDaoSupport implements UserService
 		String email = (String) paramMap.get("email");
 		String passwd = (String) paramMap.get("passwd");
 		paramMap.put("email", encryptor.base64Encoding(email));
-		paramMap.put("passwd", encryptor.encode(passwd));
+		paramMap.put("passwd", passwordEncoderService.encodePassword(passwd, null));
 		return getSqlSession().update("employee.passwdChange",paramMap);
 	}
 
@@ -58,9 +62,9 @@ public class UserServiceImpl extends SqlSessionDaoSupport implements UserService
 			paramMap.put("email", encryptor.base64Encoding(email));
 			paramMap.put("phone", encryptor.base64Encoding(phone));
 			if(paramMap.containsKey("passwd")){
-			    paramMap.put("passwd", encryptor.encode(paramMap.get("passwd")));
+			    paramMap.put("passwd", passwordEncoderService.encodePassword(paramMap.get("passwd"), null));
 			}else{
-			    paramMap.put("passwd", encryptor.encode("123456"));
+			    paramMap.put("passwd", passwordEncoderService.encodePassword("123456", null));
 			}
 			return getSqlSession().insert("employee.addEmployee", paramMap);
 		}

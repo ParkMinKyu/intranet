@@ -59,3 +59,14 @@ div.user-work{
 	overflow-y: scroll;
 	overflow-x: hidden;
 }
+
+.git-group {
+    clear: both;
+    position: fixed;
+    bottom: 0;
+    margin-bottom: 0;
+    border-width: 1px 0 0;
+    width: 100%;
+    background-image: linear-gradient(to bottom,#dedede 0,#f8f8f8 100%);
+    text-align: center;
+}

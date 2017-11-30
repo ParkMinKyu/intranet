@@ -17,9 +17,21 @@ jui.ready(function(ui, uix, _) {
     });
 });
 $(function(){
+	$('#loginForm').on("submit",function(){
+		if($('#email').val() == '' ){
+			alert("아이디를 입력하세요.");
+			return false;
+		}
+		if($('#passwd').val() == ''){
+			alert("비밀번호를 입력하세요.");
+			return false;
+		}
+		return true;
+	});
 	$('#loginBtn').click(function(){
-		$.ajax({
-			url : "<c:url value="/user/login.do"/>",
+		$('#loginForm').submit();
+		/* $.ajax({
+			url : "",
 			data : {email:$('#email').val(),passwd:$('#passwd').val()},
 			type : 'post',
 			success:function(response){
@@ -33,7 +45,7 @@ $(function(){
 			error:function(response){
 				console.log(response);
 			}
-		});
+		}); */
 	});
 	
 	$('#findPasswd').click(function(){
@@ -62,6 +74,7 @@ $(function(){
 		<div class="panel">
 			<div class="head"><i class="icon-new-window"></i>로그인 페이지</div>
 			<div class="body">
+			<form action="<c:url value="/user/login"/>" method="post" id="loginForm">
 				<table id="table_1" class="table table-classic" style="width: 50%;margin: 5px auto;" >
 					<thead>
 						<tr>
@@ -71,13 +84,21 @@ $(function(){
 					</thead>
 					<tbody>
 						<tr>
-							<td align="center"><input type="email" id="email" placeholder="email@email.com" class="input input-large input-black"></td>
-							<td align="center"><input type="password" id="passwd" class="input input-large input-black"></td>
+							<td align="center"><input type="email" id="email" name="email" placeholder="email@email.com" class="input input-large input-black"></td>
+							<td align="center"><input type="password" id="passwd" name="passwd" class="input input-large input-black"></td>
 						</tr>
+						<c:if test="${!empty errMsg }">
+						<tr>
+							<td colspan="2" align="center">
+								${errMsg }
+							</td>
+						</tr>
+						</c:if>
 						<tr>
 							<td colspan="2" align="center">
 								<a class="btn btn-gray-black" id="findPasswd">비밀번호찾기<i class="icon-check"></i></a>
 								<a class="btn btn-gray-black" id="loginBtn" href='#'>로그인<i class="icon-edit"></i></a>
+								<input id="remember_me" name="_spring_security_remember_me" type="checkbox"/>Remember me
 							</td>
 						</tr>
 
@@ -92,7 +113,15 @@ $(function(){
 						</tr>
 					</tbody>
 				</table>
+			</form>
 			</div>
+		</div>
+	</div>
+	<div class="git-group">
+		<div>
+			<iframe src="https://ghbtns.com/github-btn.html?user=ParkMinKyu&amp;repo=intranet&amp;type=star&amp;count=true" frameborder="0" scrolling="0" width="75px" height="20px"></iframe>
+			<iframe src="https://ghbtns.com/github-btn.html?user=ParkMinKyu&amp;repo=intranet&amp;type=fork&amp;count=true" frameborder="0" scrolling="0" width="75px" height="20px"></iframe>
+			<iframe src="https://ghbtns.com/github-btn.html?user=ParkMinKyu&amp;type=follow&amp;count=true" frameborder="0" scrolling="0" width="165px" height="20px"></iframe>
 		</div>
 	</div>
 </body>

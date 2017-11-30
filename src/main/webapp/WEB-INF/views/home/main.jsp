@@ -1,6 +1,7 @@
 <%@ page language="java"  contentType="text/html;charset=UTF-8"  %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -274,14 +275,13 @@
 		<div class="head">
 			<i class="icon-home"></i>업무 시스템(&nbsp;<span id="head-year"></span>년&nbsp;<span id="head-month"></span>월&nbsp;<span id="head-day"></span>일&nbsp;<span id="head-hour"></span>시&nbsp;<span id="head-min"></span>분&nbsp;)
 			<a class="btn btn-mini btn-gray-black" style="width: 70px;" id="btnLogout"><span>logout</span><i class="icon-upload icon-edge"></i></a>
-			<a class="btn btn-gray btn-small" id="sessionBtn"><span id="sessionText">세션유지(꺼짐)</span><i class="icon-gear"></i></a>
-			<c:if test="${sessionScope.userInfo != 'guest'}">
+			<sec:authorize access="!hasRole('ROLE_GUEST')">
 				<a class="btn btn-mini btn-gray-black" style="float:right" id="changePasswd">
 					<span>비밀번호 변경</span>&nbsp;<i class="icon-refresh"></i>
 				</a>
-			</c:if>
+			</sec:authorize>
 			
-			<c:if test="${sessionScope.isAdmin}">
+			<sec:authorize access="hasRole('ROLE_ADMIN')">
 				<a class="btn btn-mini btn-gray-black" style="float:right" id="addEmployee">
 					<span>사용자 추가</span>&nbsp;<i class="icon-gear"></i>
 				</a>
@@ -305,7 +305,7 @@
 					</div>
 				</div>
 				
-			</c:if>
+			</sec:authorize>
 		</div>
 		<div class="body">
 		<!-- 홈내용 -->
@@ -493,6 +493,13 @@
 			<div id='schcalendar'></div>
 		</div>
 	</div>
+	</div>
+</div>
+<div class="git-group">
+	<div>
+		<iframe src="https://ghbtns.com/github-btn.html?user=ParkMinKyu&amp;repo=intranet&amp;type=star&amp;count=true" frameborder="0" scrolling="0" width="75px" height="20px"></iframe>
+		<iframe src="https://ghbtns.com/github-btn.html?user=ParkMinKyu&amp;repo=intranet&amp;type=fork&amp;count=true" frameborder="0" scrolling="0" width="75px" height="20px"></iframe>
+		<iframe src="https://ghbtns.com/github-btn.html?user=ParkMinKyu&amp;type=follow&amp;count=true" frameborder="0" scrolling="0" width="165px" height="20px"></iframe>
 	</div>
 </div>
 <script type="text/javascript">

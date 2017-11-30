@@ -6,12 +6,12 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.min.intranet.core.CommonUtil;
 import com.min.intranet.core.SendMailService;
 import com.min.intranet.service.UserService;
 
@@ -41,80 +40,22 @@ public class UserController {
 	private SendMailService sendMailService;
 
 	@RequestMapping(value = "loginPage.do", method = RequestMethod.GET)
-	public String loginPage(Locale locale, Model model) {
+	public String loginPage(Locale locale, Model model, Authentication auth) {
 		logger.info("Welcome loginPage! The client locale is {}.", locale);
-		return "/user/loginPage";
-	}
-
-	@RequestMapping(value = "session.do", method = RequestMethod.GET)
-	@ResponseBody
-	public Map<String, String> session(Locale locale, Model model) {
-		logger.info("Welcome session! The client locale is {}.", locale);
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("locale", locale.toString());
-		return map;
-	}
-
-	@RequestMapping(value = "logout.do", method = RequestMethod.GET)
-	public String logout(Locale locale, Model model, HttpServletRequest req) {
-		logger.info("Welcome logout! The client locale is {}.", locale);
-		HttpSession session = req.getSession();
-		session.invalidate();
-		return "redirect:/user/loginPage.do";
-	}
-
-	@RequestMapping(value = "login.do", method = RequestMethod.POST)
-	@ResponseBody
-	public Map<String, Object> login(Locale locale, Model model, HttpServletRequest req,
-			@RequestParam("email") String email, @RequestParam("passwd") String passwd) throws Exception {
-		logger.info("Welcome login! The client locale is {}.", locale);
-		Map<String, String> paramMap = new HashMap<String, String>();
-		Map<String, Object> userMap = new HashMap<String, Object>();
-		HttpSession session = req.getSession();
-
-		if (adminEmail.equals(email) && adminPass.equals(passwd)) {
-			paramMap.put("email", adminEmail);
-			if (userService.getUser(paramMap).isEmpty()) {
-				paramMap.put("email", adminEmail);
-				paramMap.put("name", "admin");
-				paramMap.put("passwd", adminPass);
-				paramMap.put("phone", "000-0000-0000");
-				userService.addEmployee(paramMap);
-			}
-			session.setAttribute(CommonUtil.SESSION_USER, adminEmail);
-			session.setAttribute("isAdmin", true);
-			userMap.put("isLogin", true);
-			userMap.put("passwd", "");
-			return userMap;
-		}
-
-		if ("".equals(email)) {
-			userMap.put("isLogin", false);
-			userMap.put("msg", "메일주소를 입력하세요.");
-		} else {
-			paramMap.put("email", email);
-			userMap = userService.getUser(paramMap);
-			if (passwd.equals(userMap.get("passwd"))) {
-				session.setAttribute(CommonUtil.SESSION_USER, userMap.get("email"));
-				userMap.put("isLogin", true);
-			} else {
-				userMap.put("isLogin", false);
-				userMap.put("msg", "입력하신 정보가 일치하지 않습니다.");
-			}
-		}
-		userMap.put("passwd", "");
-		return userMap;
+		if (auth != null && auth.isAuthenticated())
+			return "/home/main";
+		else
+			return "/user/loginPage";
 	}
 
 	@RequestMapping(value = "changePasswd.do", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> changePasswd(Locale locale, Model model, HttpServletRequest req,
+	public Map<String, Object> changePasswd(Locale locale, Model model, Authentication auth, HttpServletRequest req,
 			@RequestParam("oldpass") String oldpass, @RequestParam("newpass") String newpass) throws Exception {
 		logger.info("Welcome changePasswd! The client locale is {}.", locale);
 		Map<String, String> paramMap = new HashMap<String, String>();
 		Map<String, Object> userMap = new HashMap<String, Object>();
-		HttpSession session = req.getSession();
-		String email = (String) session.getAttribute(CommonUtil.SESSION_USER);
+		String email = auth.getName();
 
 		paramMap.put("email", email);
 		userMap = userService.getUser(paramMap);
@@ -188,7 +129,7 @@ public class UserController {
 
 	@RequestMapping(value = "addEmployee.do", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> addEmployee(Locale locale, Model model, HttpServletRequest req,
+	public Map<String, Object> addEmployee(Locale locale, Model model, Authentication auth, HttpServletRequest req,
 			@RequestParam("email") String email, @RequestParam("name") String name, @RequestParam("phone") String phone)
 			throws Exception {
 		logger.info("Welcome addEmployee! The client locale is {}.", locale);
@@ -197,7 +138,7 @@ public class UserController {
 		paramMap.put("name", name);
 		paramMap.put("phone", phone);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		if (req.getSession().getAttribute(CommonUtil.SESSION_USER).equals(adminEmail)) {
+		if (auth.getName().equals(adminEmail)) {
 			int cnt = userService.addEmployee(paramMap);
 			if (cnt == 0) {
 				resultMap.put("msg", "사용자 추가 실패.");
