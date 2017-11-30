@@ -5,11 +5,12 @@
 	<select id="getUser" resultType="map">
 		SELECT 
 			EMAIL as username, 
+			EMAIL as email,
 			PASSWD as password,
 			'ROLE_ADMIN' AS authority,
 			'1' as enabled 
 		FROM EMPLOYEE 
-		WHERE EMAIL = #{username}
+		WHERE EMAIL = #{email}
 	</select>
 	
 	<update id="passwdChange">

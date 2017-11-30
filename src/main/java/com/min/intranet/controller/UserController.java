@@ -5,12 +5,14 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,6 +40,9 @@ public class UserController {
 
 	@Autowired
 	private SendMailService sendMailService;
+	
+	@Resource(name = "passwordEncoder")
+	private ShaPasswordEncoder passwordEncoderService;
 
 	@RequestMapping(value = "loginPage.do", method = RequestMethod.GET)
 	public String loginPage(Locale locale, Model model, Authentication auth) {
@@ -59,7 +64,7 @@ public class UserController {
 
 		paramMap.put("email", email);
 		userMap = userService.getUser(paramMap);
-		if (oldpass.equals(userMap.get("passwd"))) {
+		if (passwordEncoderService.encodePassword(oldpass, null).equals(userMap.get("password"))) {
 			userMap.put("success", true);
 			String passwd = newpass;
 			userMap.put("passwd", passwd);
