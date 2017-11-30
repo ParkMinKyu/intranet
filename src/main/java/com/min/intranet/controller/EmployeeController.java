@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.min.intranet.core.CommonUtil;
 import com.min.intranet.core.SendMailService;
 import com.min.intranet.service.EmployeeService;
 
@@ -152,14 +152,14 @@ public class EmployeeController {
 	 */
 	@RequestMapping(value = "getArticle.do", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, String> getArticle(Locale locale, Model model, HttpServletRequest req,
+	public Map<String, String> getArticle(Locale locale, Model model, HttpServletRequest req,Authentication auth,
 			@RequestParam("seq") String seq) throws Exception {
 		logger.info("Welcome getArticle! The client locale is {}.", locale);
 
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("seq", seq);
 		Map<String, String> article = employeeService.getArticle(paramMap);
-		String user = (String) req.getSession().getAttribute(CommonUtil.SESSION_USER);
+		String user = auth.getName();
 		if (article.get("receiver").equals(user)) {
 			employeeService.updateArticle(paramMap);
 		}
@@ -173,7 +173,7 @@ public class EmployeeController {
 	 */
 	@RequestMapping(value = "sendUserMail.do", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> sendUserMail(Locale locale, Model model, HttpServletRequest req,
+	public Map<String, Object> sendUserMail(Locale locale, Model model, HttpServletRequest req,Authentication auth,
 			@RequestParam("title") String title, @RequestParam("contents") String contents,
 			@RequestParam("email") String email, @RequestParam("isSend") boolean isSend,
 			@RequestParam("realnames") String realnames, @RequestParam("subnames") String subnames,
@@ -181,7 +181,7 @@ public class EmployeeController {
 		logger.info("Welcome sendUserMail! The client locale is {}.", locale);
 		Map<String, String> paramMap = new HashMap<String, String>();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		String writer = (String) req.getSession().getAttribute(CommonUtil.SESSION_USER);
+		String writer = auth.getName();
 		StringTokenizer realname = new StringTokenizer(realnames, ",");
 		StringTokenizer subname = new StringTokenizer(subnames, ",");
 		StringTokenizer cclist = new StringTokenizer(ccs, ",");
@@ -310,7 +310,7 @@ public class EmployeeController {
 	 */
 	@RequestMapping(value = "mailFileUpload.do", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, String> mailFileUpload(Locale locale, Model model, HttpServletRequest req,
+	public Map<String, String> mailFileUpload(Locale locale, Model model, HttpServletRequest req,Authentication auth,
 			HttpServletResponse res) {
 		logger.info("Welcome mailFileUpload! The client locale is {}.", locale);
 		Map<String, String> paramMap = new HashMap<String, String>();
@@ -333,7 +333,7 @@ public class EmployeeController {
 					if (item.getName() != null && !item.getName().equals("")) {
 						String subname = UUID.randomUUID().toString();
 						paramMap.put("realname", item.getName());
-						paramMap.put("email", (String) req.getSession().getAttribute(CommonUtil.SESSION_USER));
+						paramMap.put("email", auth.getName());
 						paramMap.put("subname", subname);
 						File file = new File(fileDir + subname);
 						item.write(file);

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/security 
+		http://www.springframework.org/schema/security/spring-security-3.1.xsd
+		http://www.springframework.org/schema/util 
+		http://www.springframework.org/schema/util/spring-util-3.1.xsd">
+
+	<http pattern="/resources/**" security="none"></http>
+
+	<http auto-config="true" use-expressions="true" create-session="never">
+		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/user/**" access="permitAll" />
+		<intercept-url pattern="/**" access="hasAnyRole('ROLE_USER','ROLE_TEST','ROLE_ADMIN','ROLE_GUEST')" />
+		<form-login login-page="/user/loginPage.do"
+			login-processing-url="/user/login"
+			default-target-url="/home/main.do"
+			authentication-success-handler-ref="userLoginSuccessHandler"
+			authentication-failure-handler-ref="userLoginFailureHandler"
+			username-parameter="email" password-parameter="passwd" />
+		<session-management>
+			<concurrency-control max-sessions="1" expired-url="/user/loginPage.do"/>
+		</session-management>
+		<logout delete-cookies="JSESSIONID,SPRING_SECURITY_REMEMBER_ME_COOKIE"
+ 			logout-success-url="/user/loginPage.do" logout-url="/user/logout.do" invalidate-session="true"/>
+		<remember-me key="wmoskey" token-validity-seconds="2419200"/>
+	</http>
+	
+	<!-- <beans:bean id="userDeniedHandler"
+		class="com.min.security.user.service.UserDeniedHandler"></beans:bean>-->
+	<beans:bean id="userLoginSuccessHandler"
+		class="com.min.security.service.UserLoginSuccessHandler"></beans:bean>
+	<beans:bean id="userLoginFailureHandler"
+		class="com.min.security.service.UserLoginFailureHandler"></beans:bean> 
+
+	<!-- <authentication-manager>
+		<authentication-provider>
+			<user-service>
+				<user name="niee@naver.com" authorities="ROLE_ADMIN" password="123456" />
+				<user name="guest" authorities="ROLE_GUEST" password="123456" />
+			</user-service>
+		</authentication-provider>
+	</authentication-manager> -->
+
+	<authentication-manager>
+		<authentication-provider user-service-ref="userLoginService">
+			<password-encoder ref="passwordEncoder"></password-encoder>
+		</authentication-provider>
+	</authentication-manager>
+	
+	<!-- <jdbc-user-service data-source-ref="dataSource" id="userLoginService"
+		users-by-username-query="SELECT EMAIL as username, PASSWD as password,'true' as enabled FROM EMPLOYEE WHERE EMAIL=?"
+		authorities-by-username-query="SELECT EMAIL as username, 'ROLE_ADMIN' AS authority 
+										FROM EMPLOYEE
+										WHERE EMAIL=?"/> -->
+										
+	<beans:bean id="userLoginService" class="com.min.security.service.UserAuthenticationService">
+		<beans:constructor-arg name="sqlSession" ref="sqlSession" />
+	</beans:bean>										
+
+	<!-- <authentication-manager>
+		<authentication-provider user-service-ref="userService">
+			<password-encoder ref="passwordEncoder">
+				<salt-source user-property="username"/>
+			</password-encoder>
+		</authentication-provider>
+	</authentication-manager> -->
+	
+	<beans:bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
+		<beans:constructor-arg name="strength" value="256"></beans:constructor-arg>
+	</beans:bean>	
+</beans:beans>

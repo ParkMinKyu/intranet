@@ -2,10 +2,10 @@ package com.min.intranet.core;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -35,9 +35,8 @@ public class WebInterceptor implements HandlerInterceptor{
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
 			Object arg2) throws Exception {
 		// TODO Auto-generated method stub
-		HttpSession httpSession = request.getSession();
-		if(httpSession.getAttribute(CommonUtil.SESSION_USER) == null){
-			response.sendRedirect(request.getContextPath()+"/common/error.do?error=sessionfalse");
+		if(!SecurityContextHolder.getContext().getAuthentication().isAuthenticated()){
+			response.sendRedirect(request.getContextPath()+"/user/logout.do");
 			return false;
 		}
 		return true;

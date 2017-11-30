@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.min.intranet.core.CommonUtil;
 import com.min.intranet.service.ScheduleService;
 
 @Controller
@@ -102,7 +102,7 @@ public class ScheduleController {
 	 */
 	@RequestMapping(value = "scheduleWrite.do", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> scheduleWrite(Locale locale, Model model, HttpServletRequest req,
+	public Map<String, Object> scheduleWrite(Locale locale, Model model, HttpServletRequest req,Authentication auth,
 			@RequestParam("title") String title, @RequestParam("endtime") String endtime,
 			@RequestParam("contents") String contents, @RequestParam("starttime") String starttime,
 			@RequestParam("realnames") String realnames, @RequestParam("subnames") String subnames,
@@ -110,7 +110,7 @@ public class ScheduleController {
 		logger.info("Welcome scheduleArticle! The client locale is {}.", locale);
 		Map<String, String> paramMap = new HashMap<String, String>();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		String writer = (String) req.getSession().getAttribute(CommonUtil.SESSION_USER);
+		String writer = auth.getName();
 		StringTokenizer realname = new StringTokenizer(realnames, ",");
 		StringTokenizer subname = new StringTokenizer(subnames, ",");
 
@@ -142,7 +142,7 @@ public class ScheduleController {
 	 */
 	@RequestMapping(value = "scheduleUpdate.do", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> scheduleUpdate(Locale locale, Model model, HttpServletRequest req,
+	public Map<String, Object> scheduleUpdate(Locale locale, Model model, HttpServletRequest req,Authentication auth,
 			@RequestParam("seq") String seq, @RequestParam("title") String title,
 			@RequestParam("endtime") String endtime, @RequestParam("contents") String contents,
 			@RequestParam("starttime") String starttime, @RequestParam("realnames") String realnames,
@@ -150,7 +150,7 @@ public class ScheduleController {
 		logger.info("Welcome scheduleUpdate! The client locale is {}.", locale);
 		Map<String, String> paramMap = new HashMap<String, String>();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		String writer = (String) req.getSession().getAttribute(CommonUtil.SESSION_USER);
+		String writer = auth.getName();
 		StringTokenizer realname = new StringTokenizer(realnames, ",");
 		StringTokenizer subname = new StringTokenizer(subnames, ",");
 		paramMap.put("seq", seq);
@@ -180,12 +180,12 @@ public class ScheduleController {
 	 */
 	@RequestMapping(value = "scheduleDelete.do", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> scheduleDelete(Locale locale, Model model, HttpServletRequest req,
+	public Map<String, Object> scheduleDelete(Locale locale, Model model, HttpServletRequest req,Authentication auth,
 			@RequestParam("seq") String seq) throws Exception {
 		logger.info("Welcome scheculeDelete! The client locale is {}.", locale);
 
 		Map<String, String> paramMap = new HashMap<String, String>();
-		String writer = (String) req.getSession().getAttribute(CommonUtil.SESSION_USER);
+		String writer = auth.getName();
 		paramMap.put("writer", writer);
 		paramMap.put("seq", seq);
 
@@ -203,11 +203,11 @@ public class ScheduleController {
 	 */
 	@RequestMapping(value = "getSchedule.do", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, String> getSchedule(Locale locale, Model model, @RequestParam("seq") String seq,
+	public Map<String, String> getSchedule(Locale locale, Model model, @RequestParam("seq") String seq,Authentication auth,
 			HttpServletRequest req) throws Exception {
 		logger.info("Welcome getSchedule! The client locale is {}.", locale);
 
-		String user = (String) req.getSession().getAttribute(CommonUtil.SESSION_USER);
+		String user = auth.getName();
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("seq", seq);
 		Map<String, String> schedule = homeService.getSchedule(paramMap);

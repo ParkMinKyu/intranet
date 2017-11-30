@@ -3,15 +3,13 @@
 <mapper namespace="employee">
 	
 	<select id="getUser" resultType="map">
-		SELECT
-			EMAIL as email,
-			NAME as name,
-			LEVEL as level,
-			PHONE as phone,
-			PASSWD as passwd,
-			REGTIME as regtime
-		FROM EMPLOYEE
-		WHERE EMAIL = #{email}
+		SELECT 
+			EMAIL as username, 
+			PASSWD as password,
+			'ROLE_ADMIN' AS authority,
+			'1' as enabled 
+		FROM EMPLOYEE 
+		WHERE EMAIL = #{username}
 	</select>
 	
 	<update id="passwdChange">
