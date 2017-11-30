@@ -20,8 +20,22 @@ public static void main(String[] args) {
 ### /src/main/resources/config/ 폴더에 각종 설정파일들 수정<br>
 ### /src/main/resources/sqlmap/E-R/ 폴더에 있는 mysql용 ERD를 이용하여 디비생성<br>
 
-개발 시작일 : 2014-04-01<br>
-V1.0 완료일 : 2015-09-03<br>
+V2.0.0 완료일 : 2017-11-30(오래도 걸렸다 ;;)<br>
+ - 추가해야지 해야지 하고 미루던 spring security 추가 ( 3.1.0 버전 인게 함정)  
+ - remember me 기능 추가
+
+V1.04 완료일 : 2017-02-08<br>
+ - 각 서비스별 controller, service 나누기 완료
+
+V1.03 완료일 : 2017-01-18(오래도 걸렸다 ;;)<br>
+ - 스케줄 수정시 파일 추가 등록 시 등록한 파일이 제대로 다운로드 되지 않는 현상 수정
+ - 스케줄 파일 삭제시 다른 파일이 같이 삭제 되는 현상 수정
+
+V1.02 완료일 : 2015-09-08<br>
+ - 스케줄 리스트 불러올때 쿼리에서 Content 칼럼 불러오는 부분 제거
+ - HomeServiceImpl에서 리스트 불러올때 Content html태그 변경 부분 제거
+ - intranet_JQUERY 에서 fullcalendar randaring할 때 이름으로 색상 변경하던 부분 제거
+
 V1.01 완료일 : 2015-09-05<br>
 - ERD EMPLOYEE - regdate default NOW() 제거
 - javascript JSON.parse 미흡부분 추가
@@ -29,7 +43,8 @@ V1.01 완료일 : 2015-09-05<br>
 - java1.6 -> 1.7 변경
 - servlet3.0변경 및 tomcat7사용시 url에 jsessionid붙는 현상 제거
 
-
+V1.0 완료일 : 2015-09-03<br>
+개발 시작일 : 2014-04-01<br>
 
 사용된 라이브러리<br>
 Spring 3.2.14<br>
