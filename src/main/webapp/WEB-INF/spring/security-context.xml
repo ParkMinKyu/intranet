@@ -26,7 +26,7 @@
 		</session-management>
 		<logout delete-cookies="JSESSIONID,SPRING_SECURITY_REMEMBER_ME_COOKIE"
  			logout-success-url="/user/loginPage.do" logout-url="/user/logout.do" invalidate-session="true"/>
-		<remember-me key="wmoskey" token-validity-seconds="2419200"/>
+		<remember-me key="nieeKey" token-validity-seconds="604800"/>
 	</http>
 	
 	<!-- <beans:bean id="userDeniedHandler"
