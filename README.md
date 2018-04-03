@@ -1,5 +1,3 @@
-# Simple Intranet
-=====
 ## Simple Intranet
 
 ## URL접속 후 guest/123456 으로 테스트 가능
@@ -19,6 +17,7 @@ public static void main(String[] args) {
 ```
 ### /src/main/resources/config/ 폴더에 각종 설정파일들 수정<br>
 ### /src/main/resources/sqlmap/E-R/ 폴더에 있는 mysql용 ERD를 이용하여 디비생성<br>
+### [설치방법](http://niees.tistory.com/66)
 
 V2.0.0 완료일 : 2017-11-30(오래도 걸렸다 ;;)<br>
  - 추가해야지 해야지 하고 미루던 spring security 추가 ( 3.1.0 버전 인게 함정)  
