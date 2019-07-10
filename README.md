@@ -1,3 +1,5 @@
+[![HitCount](http://hits.dwyl.io/ParkMinKyu/intranet.svg)](http://hits.dwyl.io/ParkMinKyu/intranet)
+
 ## Simple Intranet
 
 ## URL접속 후 guest/123456 으로 테스트 가능
