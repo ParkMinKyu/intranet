@@ -10,4 +10,5 @@ src/test/
 target/
 .DS_Store
 /files
+.idea/
 *.png
