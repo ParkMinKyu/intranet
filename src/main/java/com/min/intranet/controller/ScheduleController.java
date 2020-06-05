@@ -13,6 +13,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.min.intranet.core.DefaultEncryptor;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -21,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +47,9 @@ public class ScheduleController {
 	@Autowired
 	private ScheduleService homeService;
 
+	@Autowired
+	private DefaultEncryptor defaultEncryptor;
+
 	@RequestMapping(value = "scheduleFileDelete.do", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> scheduleFileDelete(Locale locale, Model model, @RequestParam("name") String name)
@@ -61,20 +66,25 @@ public class ScheduleController {
 
 	/**
 	 * Simply selects the home view to render by returning its name.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "scheduleArticle.do", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Map<String, String>> scheduleArticle(Locale locale, Model model, @RequestParam("syear") String syear,
-			@RequestParam("smonth") String smonth, @RequestParam("eyear") String eyear,
-			@RequestParam("emonth") String emonth) throws Exception {
+	public List<Map<String, String>> scheduleArticle(Locale locale,
+													 Authentication authentication,
+													 Model model, @RequestParam("syear") String syear,
+													 @RequestParam("smonth") String smonth,
+													 @RequestParam("eyear") String eyear,
+													 @RequestParam("emonth") String emonth) throws Exception {
 		logger.info("Welcome scheduleArticle! The client locale is {}.", locale);
 
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("sDay", syear + "/" + smonth + "/01");
 		paramMap.put("eDay", eyear + "/" + emonth + "/01");
-		List<Map<String, String>> resultMap = homeService.getScheduleArticles(paramMap);
+		paramMap.put("email",  defaultEncryptor.base64Encoding(((UserDetails)authentication.getPrincipal()).getUsername()));
+		List<Map<String, String>> resultMap = homeService
+				.getScheduleArticles(paramMap);
 
 		return resultMap;
 	}
@@ -97,16 +107,20 @@ public class ScheduleController {
 
 	/**
 	 * Simply selects the home view to render by returning its name.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "scheduleWrite.do", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> scheduleWrite(Locale locale, Model model, HttpServletRequest req,Authentication auth,
-			@RequestParam("title") String title, @RequestParam("endtime") String endtime,
-			@RequestParam("contents") String contents, @RequestParam("starttime") String starttime,
-			@RequestParam("realnames") String realnames, @RequestParam("subnames") String subnames,
-			@RequestParam("etcYn") String etcYn) throws Exception {
+	public Map<String, Object> scheduleWrite(Locale locale, Model model,Authentication auth,
+											 HttpServletRequest req, @RequestParam("title") String title,
+											 @RequestParam("endtime") String endtime,
+											 @RequestParam("contents") String contents,
+											 @RequestParam("starttime") String starttime,
+											 @RequestParam("realnames") String realnames,
+											 @RequestParam("subnames") String subnames,
+											 @RequestParam("etcYn") String etcYn,
+											 @RequestParam("type") String type) throws Exception {
 		logger.info("Welcome scheduleArticle! The client locale is {}.", locale);
 		Map<String, String> paramMap = new HashMap<String, String>();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -122,6 +136,7 @@ public class ScheduleController {
 		paramMap.put("starttime", starttime);
 		paramMap.put("endtime", endtime);
 		paramMap.put("etcYn", etcYn);
+		paramMap.put("type", type);
 		resultMap.put("resultCnt", homeService.scheduleWrite(paramMap));
 		while (realname.hasMoreElements() && subname.hasMoreElements()) {
 			Map<String, String> fileMap = new HashMap<String, String>();
@@ -137,16 +152,21 @@ public class ScheduleController {
 
 	/**
 	 * Simply selects the home view to render by returning its name.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "scheduleUpdate.do", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> scheduleUpdate(Locale locale, Model model, HttpServletRequest req,Authentication auth,
-			@RequestParam("seq") String seq, @RequestParam("title") String title,
-			@RequestParam("endtime") String endtime, @RequestParam("contents") String contents,
-			@RequestParam("starttime") String starttime, @RequestParam("realnames") String realnames,
-			@RequestParam("subnames") String subnames, @RequestParam("etcYn") String etcYn) throws Exception {
+	public Map<String, Object> scheduleUpdate(Locale locale, Model model, Authentication auth,
+											  HttpServletRequest req, @RequestParam("seq") String seq,
+											  @RequestParam("title") String title,
+											  @RequestParam("endtime") String endtime,
+											  @RequestParam("contents") String contents,
+											  @RequestParam("starttime") String starttime,
+											  @RequestParam("realnames") String realnames,
+											  @RequestParam("subnames") String subnames,
+											  @RequestParam("etcYn") String etcYn,
+											  @RequestParam("type") String type) throws Exception {
 		logger.info("Welcome scheduleUpdate! The client locale is {}.", locale);
 		Map<String, String> paramMap = new HashMap<String, String>();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -160,6 +180,7 @@ public class ScheduleController {
 		paramMap.put("starttime", starttime);
 		paramMap.put("endtime", endtime);
 		paramMap.put("etcYn", etcYn);
+		paramMap.put("type", type);
 		while (realname.hasMoreElements()) {
 			Map<String, String> fileMap = new HashMap<String, String>();
 			String rname = realname.nextToken();
@@ -285,6 +306,32 @@ public class ScheduleController {
 		res.sendRedirect(req.getContextPath() + "/resources/SE/photo_uploader/popup/callback.html?sFileName=" + realname
 				+ "&callback_func=" + callback_func + "&bNewLine=true&sFileURL=" + req.getContextPath()
 				+ "/resources/images/" + imgName);
+	}
+
+	/**
+	 * Simply selects the home view to render by returning its name.
+	 *
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "eventDragDropUpdate.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> eventDragDropUpdate(Locale locale, Model model, Authentication auth,
+												   HttpServletRequest req, @RequestParam("seq") String seq,
+												   @RequestParam("endtime") String endtime,
+												   @RequestParam("starttime") String starttime) throws Exception {
+		logger.info("Welcome scheduleUpdate! The client locale is {}.", locale);
+
+		Map<String, String> paramMap = new HashMap<String, String>();
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+
+		String writer = auth.getName();
+
+		paramMap.put("seq", seq);
+		paramMap.put("writer", writer);
+		paramMap.put("starttime", starttime);
+		paramMap.put("endtime", endtime);
+		resultMap.put("resultCnt", homeService.scheduleUpdate(paramMap));
+		return resultMap;
 	}
 
 }

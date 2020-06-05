@@ -34,7 +34,7 @@ public class HomeController {
 	 * "/mobile/main"; }else{ }
 	 */
     	logger.info("Welcome main! The client locale is {}.", locale);
-    	return "/home/main";
+    	return "/home/mainN";
     }
 
 }

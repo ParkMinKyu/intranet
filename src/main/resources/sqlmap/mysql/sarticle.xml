@@ -27,13 +27,13 @@
 	<select id="getList" resultType="map">
 		SELECT
 			SEQ as seq,
-			EMAIL as email,
-			WRITER as writer,
 			TITLE as title,
 			STARTTIME as starttime,
-			ENDTIME as endtime
+			ENDTIME as endtime,
+			TYPE as type
 		FROM SCHEDULE_VIEW
 		WHERE (TO_DAYS(STARTTIME) BETWEEN TO_DAYS(#{sDay}) AND TO_DAYS(LAST_DAY(#{eDay})) OR TO_DAYS(ENDTIME) BETWEEN TO_DAYS(#{sDay}) AND TO_DAYS(LAST_DAY(#{eDay})) OR TO_DAYS(#{sDay}) BETWEEN TO_DAYS(STARTTIME) AND TO_DAYS(ENDTIME))
+		AND EMAIL = #{email}
 		ORDER BY STARTTIME ASC
 	</select>
 
@@ -48,7 +48,8 @@
 			ENDTIME as endtime,
 			REGTIME as regtime,
 			UPTIME as uptime,
-			ETCYN as etcYn
+			ETCYN as etcYn,
+			TYPE as type
 		FROM SCHEDULE_VIEW
 		WHERE SEQ = #{seq}
 	</select>
@@ -64,7 +65,8 @@
 			ENDTIME,
 			ETC_YN,
 			REGTIME,
-			UPTIME
+			UPTIME,
+			TYPE
 			)
 		VALUES
 			(
@@ -76,7 +78,8 @@
 			#{endtime},
 			#{etcYn},
 			NOW(),
-			NOW()
+			NOW(),
+			#{type}
 			)
 	</insert>
 	
@@ -137,13 +140,39 @@
 	
 	<update id="update">
 		UPDATE SCHEDULE
-		SET TITLE = #{title},
+		SET 
+		<if test="title != null and title != ''">
+			TITLE = #{title},
+		</if>
+		<if test="contents != null and contents != ''">
 			CONTENTS = #{contents},
+		</if>
+		<if test="starttime != null and starttime != ''">
 			STARTTIME = #{starttime},
+		</if>
+		<if test="endtime != null and endtime != ''">
 			ENDTIME = #{endtime},
+		</if>
+		<if test="etcYn != null and etcYn != ''">
 			ETC_YN = #{etcYn},
+		</if>
+		<if test="type != null and type != ''">
+			TYPE = ${type},
+		</if>
 			UPTIME = NOW()
 		WHERE SEQ = #{seq}
 		AND WRITER = #{writer}
 	</update>
+	
+	<select id="getReport" resultType="map">
+	SELECT
+		SEQ as seq,
+		TITLE as title,
+		STARTTIME as starttime,
+		ENDTIME as endtime,
+		TYPE as type
+	FROM SCHEDULE_VIEW
+	WHERE TO_DAYS(NOW()) BETWEEN TO_DAYS(STARTTIME) AND TO_DAYS(ENDTIME)
+	ORDER BY STARTTIME ASC
+	</select>
 </mapper>

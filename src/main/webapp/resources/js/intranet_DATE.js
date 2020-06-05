@@ -638,22 +638,21 @@ function gfnGetHolidays(nYear)
  /////// 음력 체크
  // 구정
  aHoliday[0] = gfnLunar2Solar( "0" + (nYear-1) + "1230" ) + "/설날";
- aHoliday[1] =  gfnAddDate(aHoliday[0], 1);
- aHoliday[2] = gfnAddDate(aHoliday[1], 1);
  // 석가탄신일
- aHoliday[3] = gfnLunar2Solar( "0" + nYear + "0408" ) + "/석가탄신일";
+ aHoliday[1] = gfnLunar2Solar( "0" + nYear + "0408" ) + "/석가탄신일";
  // 추석
- aHoliday[4] = gfnLunar2Solar( "0" + nYear + "0814" ) + "/추석";
- aHoliday[5] = gfnAddDate(aHoliday[4], 1);
- aHoliday[6] = gfnAddDate(aHoliday[5], 1);
+ aHoliday[2] = gfnLunar2Solar( "0" + nYear + "0814" ) + "/추석";
  /////// 양력 체크
- aHoliday[7] = nYear+"/01/01" + "/신정";
- aHoliday[8] = nYear+"/03/01" + "/삼일절";
- aHoliday[9] = nYear+"/05/01" + "/근로자의날"; 
- aHoliday[10] = nYear+"/05/05" + "/어린이날"; 
- aHoliday[11] = nYear+"/06/06" + "/현충일";  
- aHoliday[12] = nYear+"/08/15" + "/광복절";   
- aHoliday[13] = nYear+"/12/25" + "/성탄절";   
+ aHoliday[3] = nYear+"/01/01" + "/신정";
+ aHoliday[4] = nYear+"/03/01" + "/삼일절";
+ aHoliday[5] = nYear+"/05/01" + "/근로자의날"; 
+ aHoliday[6] = nYear+"/05/05" + "/어린이날"; 
+ aHoliday[7] = nYear+"/06/06" + "/현충일";  
+ aHoliday[8] = nYear+"/08/15" + "/광복절";   
+ aHoliday[9] = nYear+"/10/03" + "/개천절";   
+ aHoliday[10] = nYear+"/10/09" + "/한글날";   
+ aHoliday[11] = nYear+"/10/16" + "/주희생일";   
+ aHoliday[12] = nYear+"/12/25" + "/성탄절";   
  return aHoliday.sort(); 
 }
  /******************************************************************************
@@ -964,14 +963,18 @@ function isHoliday(date){
 function addHoliday(date){
 	for(var i = 0 ; i < aHoliday.length ; i ++){
 		var temp = aHoliday[i].split("/");
-		if(temp[3] == '설날'){
-			$('#schcalendar').fullCalendar( 'renderEvent',{title  : temp[3],start  : new Date(temp[0],(parseInt(temp[1])-1),temp[2]),end : new Date(temp[0],(parseInt(temp[1])-1),parseInt(temp[2])+2),color:'red'} );
-		}else if(temp[3] == '추석'){
-			$('#schcalendar').fullCalendar( 'renderEvent',{title  : temp[3],start  : new Date(temp[0],(parseInt(temp[1])-1),temp[2]),end : new Date(temp[0],(parseInt(temp[1])-1),parseInt(temp[2])+2),color:'red'} );
-		}else if(temp[3] != null ){
-			$('#schcalendar').fullCalendar( 'renderEvent',{title  : temp[3],start  : new Date(temp[0],(parseInt(temp[1])-1),temp[2]),color:'red'} );
+		
+		var event = {id:new Date(temp[0],(parseInt(temp[1])-1),temp[2]).getTime() , title  : temp[3],start  : new Date(temp[0],(parseInt(temp[1])-1),temp[2]),color:'red', editable : false, allDay: true,  rendering: 'background'};
+		
+		if(temp[3] == '설날' || temp[3] == '추석' ){
+			event.start = new Date(temp[0],(parseInt(temp[1])-1),temp[2]);
+			event.end = new Date(temp[0],(parseInt(temp[1])-1),parseInt(temp[2])+3).toISOString(); 
 		}
 		
+		if(calendar.getEventById( new Date(temp[0],(parseInt(temp[1])-1),temp[2]).getTime() ) != null){
+			calendar.getEventById( new Date(temp[0],(parseInt(temp[1])-1),temp[2]).getTime() ).remove();
+		}
+		calendar.addEvent( event );
 	}
 }
 
@@ -979,10 +982,7 @@ function addHoliday(date){
  * 급여날 계산
  */
 function getPayDay(){
-	var calDate = $('#schcalendar').fullCalendar('getDate');
-	if($('#schcalendar').attr('class') == null){
-		calDate = new Date();
-	}
+	var calDate = calendar.getDate();
 	var y = calDate.getFullYear();
 	var m = calDate.getMonth();
 	var d = 25;
@@ -1000,5 +1000,9 @@ function getPayDay(){
 	while(isHoliday(new Date(y,m,d))){
 		d = d-1;
 	}
-	$('#schcalendar').fullCalendar( 'renderEvent',{title  : '월급날',start  : new Date(y,m,d),color:'red'} );
+	
+	if(calendar.getEventById( new Date(y,m,d).getTime() ) != null){
+		calendar.getEventById( new Date(y,m,d).getTime() ).remove();
+	}
+	calendar.addEvent( {id: new Date(y,m,d).getTime(),title  : '월급날',start  : new Date(y,m,d),color:'red', editable : false, allDay: true} );
 }

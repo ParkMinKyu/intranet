@@ -1,5 +1,5 @@
-/**
- * 제이쿼리 영역
+/* 
+* 제이쿼리 영역
  */
 $(function(){
 	getJSON(vo,{seq:1});
@@ -70,7 +70,11 @@ $(function(){
 	});
 	
 	$('#etc-chart').click(function(){
-		$.getJSON(getContextPath()+"/home/getChart.do",{},function(response){
+		var syear = $('#syear').val();
+		var smonth = $('#smonth').val();
+		var eyear = $('#eyear').val();
+		var emonth = $('#emonth').val();
+		$.getJSON(getContextPath()+"/home/getChart.do",{syear:syear,smonth:smonth,eyear:eyear,emonth:emonth},function(response){
 			var result = response;
 			var array = new Array();
 			for(var i = 0 ; i < result.length ; i ++){
@@ -96,7 +100,7 @@ $(function(){
 				width : 600,
 				height: 500,
 				isLine : true,
-				title : 'niee@urielsoft.co.kr',
+				title : 'niee@naver.com',
 				titleSize : 10,
 				lineCount : 5,
 				isTooltip : false,
@@ -200,6 +204,7 @@ $(function(){
 				url = getContextPath()+'/home/scheduleUpdate.do';
 			}
 			scheduleParam.etcYn = ($('#etcYn').is(':checked')?'N':'Y');
+			scheduleParam.type = $('#type').val();
 			scheduleParam.realnames = realnames;
 			scheduleParam.subnames = subnames;
 			$.ajax({
@@ -211,7 +216,7 @@ $(function(){
 					$('iframe[id!=scheduleFrame]').remove();
 					$('#title').val('');
 					$('#contents').val('');
-					$('#schcalendar').fullCalendar('refetchEvents');
+					calendar.refetchEvents()
 					$('#schedulefileName').html('');
 					var date = new Date();
 		    		spicker.select(date.getFullYear(),date.getMonth()+1,date.getDate());
@@ -221,141 +226,149 @@ $(function(){
 		}
 	});
 	
-	$('#schcalendar').fullCalendar({
-		header: {
-			left: ' ',
-			center: 'prev title next',
-			right: 'today,month,basicWeek,basicDay'
-		},
-		titleFormat: {
-			month: 'yyyy년 MMMM',
-			week: "yyyy년 MMMM d[yyyy]{'일 ~ '[mmm] dd일'}",
-			day: "yyyy년 MMM d dddd"
-		},
-		monthNames : ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
-		monthNamesShort : ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
-		dayNames : ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'],
-		dayNamesShort : ['일','월','화','수','목','금','토'],
-		allDayText : '금일일정',
-		minTime : 9,
-		maxTime : 19,
-		axisFormat : "HH:mm",
-		editable: false,
-		events: function(start, end, callback) {
-	        $.ajax({
-	            url: getContextPath()+"/home/scheduleArticle.do",
-	            dataType: 'json',
-	            data: {
-	            	syear:start.getFullYear(),
-		        	smonth:start.getMonth()+1,
-		        	eyear:end.getFullYear(),
-		        	emonth:end.getMonth()+1
-	            },
-	            success: function(response) {
-	            	getPayDay();
-	                var events = [];
-	                for(var i = 0 ; i < response.length ; i ++){
-	                	var color;
-	                	var textColor;
-	                	var borderColor;
-	                	events.push({
-	                        title: response[i].title,
-	                        start: new Date(response[i].starttime),
-	                        end : new Date(response[i].endtime),
-	                        seq : response[i].seq,
-	                        allDay: (new Date(response[i].starttime).getHours()<8 || new Date(response[i].end).getHours()>19),
-	                        color : color,
-	                        textColor : textColor,
-	                        borderColor:borderColor
-	                    });
-	                }
-	                callback(events);
-	            },
-	            error : function(response,txt){
-	            	location.href = getContextPath()+"/common/error.do?error="+txt;
-	            }
-	        });
-	    },
-	    eventClick: function(calEvent, jsEvent, view) {
-	    	if(calEvent.seq != null){
-	    		
-	    		$.getJSON(getContextPath()+"/home/scheduleFiles.do",{seq:calEvent.seq},function(response){
-	    			var files;
-	    			files = response;
-	    		
-			    	$.getJSON(getContextPath()+"/home/getSchedule.do",{seq:calEvent.seq},function(response){
-			    		var article = response;
-				    	var sdate = new Date(article.starttime);
-						var stime = sdate.getFullYear() + "년 " + (sdate.getMonth()+1) + "월 " + sdate.getDate() + "일";
-						var edate = new Date(article.endtime);
-						var etime = edate.getFullYear() + "년 " + (edate.getMonth()+1) + "월 " + edate.getDate() + "일";
-						var fileHtml = '<div class="notify" style="margin-top:5px;">';
-						for(var i = 0 ; i < files.length ; i ++){
-							fileHtml += '&nbsp;&nbsp;<a href="javascript:scheduleFileDown('+files[i].seq+')">' + files[i].realname +'</a>&nbsp;&nbsp;';
-						}
-						fileHtml += '</div>';
-						$("#modal-contents").html('<div class="label label-red" style="min-width:300px;">' + stime + ' ~ ' + etime + '</div><br><div class="notify contents-view" style="margin-top:5px;">' + article.contents +'</div>'+fileHtml);
-						if(article.isWriter == 'true'){
-							scheduleParam = {seq : article.seq,title : article.title, contents : article.contents, starttime : article.starttime, endtime : article.endtime, etcYn : article.etcYn, files:files};
-							var updateBtn = $('<a/>', {
-											    href: '#',
-											    name: 'updateBtn',
-											    id: 'updateBtn',
-											    html: '수정',
-											    addClass : 'btn btn-gray btn-small',
-											    onclick: 'javascript:contentsUpdate();'
-											});
-							var deleteBtn = $('<a/>', {
-											    href: '#',
-											    name: 'deleteBtn',
-											    id: 'deleteBtn',
-											    html: '삭제',
-											    addClass : 'btn btn-gray btn-small',
-											    onclick: 'javascript:contentsDelete('+article.seq+');'
-											});
-							var closeBtn = $('<a/>', {
-											    href: '#',
-											    name: 'closeBtn',
-											    id: 'closeBtn',
-											    html: 'Close',
-											    addClass : 'btn btn-gray btn-small',
-											    onclick: 'javascript:modal.hide();'
-											});
-							
-							$('#contentsBtn').html( updateBtn[0].outerHTML +  deleteBtn[0].outerHTML +  closeBtn[0].outerHTML);
-						}else{
-							var closeBtn = $('<a/>', {
-							    href: '#',
-							    name: 'closeBtn',
-							    id: 'closeBtn',
-							    html: 'Close',
-							    addClass : 'btn btn-gray btn-small',
-							    onclick: 'javascript:modal.hide();'
-							});
-			
-							$('#contentsBtn').html( closeBtn[0].outerHTML);
-						}
-						$("#modal-title").html(article.title + '<span style="float:right;">'+article.writer+'</span>');
-						modal.show();
-			    	}).fail(function(jqxhr, textStatus, error){
-						 var err = textStatus + ", " + error;
-						 console.log( "Request Failed: " + err );
-						 location.href=getContextPath()+'/common/error.do?code='+textStatus;
-					});
-	    		});
-	    	}
-	    },
-	    dayClick: function(date) {
-			scheduleParam = {seq : 0, title : '', contents : '', starttime : date.getTime(), endtime : date.getTime(), writer:''};
-			$('#title').val(scheduleParam.title);
-			$('#contents').val(scheduleParam.contents);
-			spicker.select(date.getFullYear(),date.getMonth()+1,date.getDate());
-			epicker.select(date.getFullYear(),date.getMonth()+1,date.getDate());
-			$('#etcYn').attr('checked',false);
-			writeModal.show();
-			editorInit('contents');
-	    }
-	});
+//	$('#schcalendar').fullCalendar({
+//		header: {
+//			left: ' ',
+//			center: 'prev title next',
+//			right: 'today,month,basicWeek,basicDay'
+//		},
+//		titleFormat: {
+//			month: 'yyyy년 MMMM',
+//			week: "yyyy년 MMMM d[yyyy]{'일 ~ '[mmm] dd일'}",
+//			day: "yyyy년 MMM d dddd"
+//		},
+//		monthNames : ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+//		monthNamesShort : ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+//		dayNames : ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'],
+//		dayNamesShort : ['일','월','화','수','목','금','토'],
+//		allDayText : '금일일정',
+//		minTime : 9,
+//		maxTime : 19,
+//		axisFormat : "HH:mm",
+//		editable: true,
+//		eventDrop : function( event ){
+//			eventDragDropUpdate(event)
+//		},
+//		eventResize : function(event){
+//			eventDragDropUpdate(event)
+//		},
+//		events: function(start, end, callback) {
+//	        $.ajax({
+//	            url: getContextPath()+"/home/scheduleArticle.do",
+//	            dataType: 'json',
+//	            data: {
+//	            	syear:start.getFullYear(),
+//		        	smonth:start.getMonth()+1,
+//		        	eyear:end.getFullYear(),
+//		        	emonth:end.getMonth()+1
+//	            },
+//	            success: function(response) {
+//	            	getPayDay();
+//	                var events = [];
+//	                for(var i = 0 ; i < response.length ; i ++){
+//	                	var color;
+//	                	var textColor;
+//	                	var borderColor;
+//	                	events.push({
+//	                        title: response[i].title,
+//	                        start: new Date(response[i].starttime),
+//	                        end : new Date(response[i].endtime),
+//	                        seq : response[i].seq,
+//	                        allDay: (new Date(response[i].starttime).getHours()<8 || new Date(response[i].end).getHours()>19),
+//	                        color : (response[i].type == 2 ? '#a125d4' : response[i].type == 3 ? '#5b9a53' : response[i].type == 4 ? '#3a4dad' : color),
+//	                        textColor : textColor,
+//	                        borderColor:borderColor
+//	                    });
+//	                }
+//	                callback(events);
+//	            },
+//	            error : function(response,txt){
+//	            	location.href = getContextPath()+"/common/error.do?error="+txt;
+//	            }
+//	        });
+//	    },
+//	    eventClick: function(calEvent, jsEvent, view) {
+//	    	if(calEvent.seq != null){
+//	    		
+//	    		$.getJSON(getContextPath()+"/home/scheduleFiles.do",{seq:calEvent.seq},function(response){
+//	    			var files;
+//	    			files = response;
+//	    		
+//			    	$.getJSON(getContextPath()+"/home/getSchedule.do",{seq:calEvent.seq},function(response){
+//			    		var article = response;
+//				    	var sdate = new Date(article.starttime);
+//						var stime = sdate.getFullYear() + "년 " + (sdate.getMonth()+1) + "월 " + sdate.getDate() + "일";
+//						var edate = new Date(article.endtime);
+//						var etime = edate.getFullYear() + "년 " + (edate.getMonth()+1) + "월 " + edate.getDate() + "일";
+//						var fileHtml = '<div class="notify" style="margin-top:5px;">';
+//						for(var i = 0 ; i < files.length ; i ++){
+//							fileHtml += '&nbsp;&nbsp;<a href="javascript:scheduleFileDown('+files[i].seq+')">' + files[i].realname +'</a>&nbsp;&nbsp;';
+//						}
+//						fileHtml += '</div>';
+//						$("#modal-contents").html('<div class="label label-red" style="min-width:300px;">' + stime + ' ~ ' + etime + '</div><br><div class="notify contents-view" style="margin-top:5px;">' + article.contents +'</div>'+fileHtml);
+//						if(article.isWriter == 'true'){
+//							scheduleParam = {seq : article.seq,title : article.title, contents : article.contents, starttime : article.starttime, endtime : article.endtime, etcYn : article.etcYn, type:article.type, files:files};
+//							var updateBtn = $('<a/>', {
+//											    href: '#',
+//											    name: 'updateBtn',
+//											    id: 'updateBtn',
+//											    html: '수정',
+//											    addClass : 'btn btn-gray btn-small',
+//											    onclick: 'javascript:contentsUpdate();'
+//											});
+//							var deleteBtn = $('<a/>', {
+//											    href: '#',
+//											    name: 'deleteBtn',
+//											    id: 'deleteBtn',
+//											    html: '삭제',
+//											    addClass : 'btn btn-gray btn-small',
+//											    onclick: 'javascript:contentsDelete('+article.seq+');'
+//											});
+//							var closeBtn = $('<a/>', {
+//											    href: '#',
+//											    name: 'closeBtn',
+//											    id: 'closeBtn',
+//											    html: 'Close',
+//											    addClass : 'btn btn-gray btn-small',
+//											    onclick: 'javascript:modal.hide();'
+//											});
+//							
+//							$('#contentsBtn').html( updateBtn[0].outerHTML +  deleteBtn[0].outerHTML +  closeBtn[0].outerHTML);
+//							$('#type').val(article.type);
+//						}else{
+//							var closeBtn = $('<a/>', {
+//							    href: '#',
+//							    name: 'closeBtn',
+//							    id: 'closeBtn',
+//							    html: 'Close',
+//							    addClass : 'btn btn-gray btn-small',
+//							    onclick: 'javascript:modal.hide();'
+//							});
+//			
+//							$('#contentsBtn').html( closeBtn[0].outerHTML);
+//						}
+//						$("#modal-title").html(article.title + '<span style="float:right;">'+article.writer+'</span>');
+//						modal.show();
+//			    	}).fail(function(jqxhr, textStatus, error){
+//						 var err = textStatus + ", " + error;
+//						 console.log( "Request Failed: " + err );
+//						 location.href=getContextPath()+'/common/error.do?code='+textStatus;
+//					});
+//	    		});
+//	    	}
+//	    },
+//	    dayClick: function(date, allDay, jsEvent, view) {
+//			scheduleParam = {seq : 0, title : '', contents : '', starttime : date.getTime(), endtime : date.getTime(), writer:'',type:1};
+//			$('#title').val(scheduleParam.title);
+//			$('#contents').val(scheduleParam.contents);
+//			spicker.select(date.getFullYear(),date.getMonth()+1,date.getDate());
+//			epicker.select(date.getFullYear(),date.getMonth()+1,date.getDate());
+//			$('#etcYn').attr('checked',false);
+//			$('#type').val(scheduleParam.type);
+//			writeModal.show();
+//			editorInit('contents');
+//	    }
+//	});
 	
 	$('#mailBtn').click(function(){
 		oEditors.getById["mail-contents"].exec("UPDATE_CONTENTS_FIELD", []);
@@ -411,7 +424,7 @@ $(function(){
 	});
 
 	$('#sview-refresh').click(function(){
-		$('#schcalendar').fullCalendar('refetchEvents');
+		calendar.refetchEvents()
 	});
 	
 	$('#writeClose').click(function(){
@@ -438,7 +451,7 @@ $(function(){
 				$(this).addClass('active');
 				$('#'+ $child.attr('title')).show();
 				if(id == 'tab_View'){
-					$('#schcalendar').fullCalendar('refetchEvents');
+					calendar.refetchEvents()
 				}
 			}else{
 				$(this).removeClass('active');

@@ -117,12 +117,5 @@ $(function(){
 			</div>
 		</div>
 	</div>
-	<div class="git-group">
-		<div>
-			<iframe src="https://ghbtns.com/github-btn.html?user=ParkMinKyu&amp;repo=intranet&amp;type=star&amp;count=true" frameborder="0" scrolling="0" width="75px" height="20px"></iframe>
-			<iframe src="https://ghbtns.com/github-btn.html?user=ParkMinKyu&amp;repo=intranet&amp;type=fork&amp;count=true" frameborder="0" scrolling="0" width="75px" height="20px"></iframe>
-			<iframe src="https://ghbtns.com/github-btn.html?user=ParkMinKyu&amp;type=follow&amp;count=true" frameborder="0" scrolling="0" width="165px" height="20px"></iframe>
-		</div>
-	</div>
 </body>
 </html>

@@ -12,6 +12,30 @@ var vo = {
 	};
 
 /**
+ * 이벤트 드래그/드랍 날짜 변경 
+ * */
+function eventDragDropUpdate(info){
+	var event = info.event;
+	var endDate = new Date(new Date(event.end.getFullYear(), event.end.getMonth(), event.end.getDate())-1); 
+	var starttime = event.start.getFullYear() +"/"+ ((event.start.getMonth() + 1) < 10 ? "0" + (event.start.getMonth() + 1) : (event.start.getMonth() + 1)) +"/"+ event.start.getDate();
+	var endtime = (event.end == null ? starttime : endDate.getFullYear() +"/"+ ((endDate.getMonth() + 1) < 10 ? "0" + (endDate.getMonth() + 1) : (endDate.getMonth() + 1)) +"/"+ endDate.getDate());
+	$.ajax({
+		url : getContextPath()+'/home/eventDragDropUpdate.do',
+		data : {seq : event.extendedProps.seq, starttime : starttime, endtime : endtime},
+		type : 'post',
+		success : function(response){
+			if(JSON.parse(response).resultCnt <= 0){
+				alert("수정 실패");
+				calendar.refetchEvents();
+			}
+		},
+        error : function(response,txt){
+        	location.href = getContextPath()+"/common/error.do?error="+txt;
+        }
+	});
+}
+
+/**
  * 메일 첨부파일 다운로드
  */
 function userFileDown(seq){
@@ -150,7 +174,7 @@ function getFiles(){
 		var result = response;
 		var article = new Array();
 		for(var i = 0 ; i < result.length ; i ++){
-			var date = new Date(result[i].regtime.replace(/\-/g,"/"));
+			var date = new Date(result[i].regtime);
 			var obj = { seq : result[i].seq, realname : result[i].realname, regtime : date.getFullYear() + "년 " + (date.getMonth()+1) + "월 " + date.getDate() + "일", name : result[i].name};
 			article.push(obj);
 		}
@@ -306,7 +330,7 @@ function contentsDelete(seq){
 			var result = data;
 			if(result.resultCnt > 0){
 				alert('삭제 완료');
-				$('#schcalendar').fullCalendar('refetchEvents');
+				calendar.refetchEvents();
 				modal.hide();
 			}else{
 				alert('삭제 실패');
@@ -363,6 +387,9 @@ function changePasswd(){
 					$('#newpass').val('');
 					$('#oldpass').focus();
 				}
+			},
+			error : function(res){
+				alert(res.status + " : " + res.statusText);
 			}
 		});
 	}
@@ -480,8 +507,7 @@ function refrashRow(table, param){
 			}).click(function(){
 				var url = "";
 				if(userArticle.selector == table.selector){
-					url = getContextPath()+"/home/" +
-							"";
+					url = getContextPath()+"/home/getArticle.do";
 				}else if(scheduleArticle.selector == table.selector){
 					url = getContextPath()+"/home/getSchedule.do";
 				}

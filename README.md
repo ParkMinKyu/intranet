@@ -20,6 +20,11 @@ public static void main(String[] args) {
 ### /src/main/resources/config/ 폴더에 각종 설정파일들 수정<br>
 ### /src/main/resources/sqlmap/E-R/ 폴더에 있는 mysql용 ERD를 이용하여 디비생성<br>
 
+V2.0.1 완료일 : 2020-06-06
+ - 풀캘린더 버전 4로 변경
+ - 이벤트 드래그 이동 및 리사이즈로 날짜 바로 수정 추가
+ - 이벤트 등록시 마우스 드래그로 날짜 범위 한번에 등록 가능 추가  
+
 V2.0.0 완료일 : 2017-11-30(오래도 걸렸다 ;;)<br>
  - 추가해야지 해야지 하고 미루던 spring security 추가 ( 3.1.0 버전 인게 함정)  
  - remember me 기능 추가
