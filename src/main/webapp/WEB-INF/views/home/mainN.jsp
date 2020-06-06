@@ -1,4 +1,4 @@
-<%@ page language="java"  contentType="text/html;charset=UTF-8"  %>
+<%@ page contentType="text/html;charset=UTF-8"  %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
@@ -74,7 +74,7 @@
 		<div class="body">
 			<div id="gameBody"></div>
 			<div style="text-align: center; margin-bottom: 10px;">
-				<a href="#" class="btn btn-gray btn-small" onclick='javascript:gameModal.hide();'>Close</a>
+				<a href="#" class="btn btn-gray btn-small" onclick='gameModal.hide();'>Close</a>
 			</div>
 		</div>
 	</div>
@@ -86,7 +86,7 @@
 		<div class="body">
 			<div class="contents-view" id="sviewModal-contents"></div>
 			<div style="text-align: center; margin-bottom: 10px;">
-				<a href="#" class="btn btn-gray btn-small" onclick='javascript:sviewModal.hide();'>Close</a>
+				<a href="#" class="btn btn-gray btn-small" onclick='sviewModal.hide();'>Close</a>
 			</div>
 		</div>
 	</div>
@@ -100,7 +100,7 @@
 				<canvas id="canvas" width="500" height="400"></canvas>
 			</div>
 			<div style="text-align: center; margin-bottom: 10px;">
-				<a href="#" class="btn btn-gray btn-small" onclick='javascript:chartModal.hide();'>Close</a>
+				<a href="#" class="btn btn-gray btn-small" onclick='chartModal.hide();'>Close</a>
 			</div>
 		</div>
 	</div>
@@ -117,8 +117,8 @@
 				<input type="file" name="file" id="file">
 			</div>
 			<div style="text-align: center; margin-top: 45px;" id="fileBtn">
-				<a href="#" class="btn btn-gray btn-small" onclick='javascript:fileUpload();'>등록</a>
-				<a href="#" class="btn btn-gray btn-small" onclick='javascript:fileModal.hide();'>Close</a>
+				<a href="#" class="btn btn-gray btn-small" onclick='fileUpload();'>등록</a>
+				<a href="#" class="btn btn-gray btn-small" onclick='fileModal.hide();'>Close</a>
 			</div>
 		</div>
 	</div>
@@ -135,8 +135,8 @@
 				<input class="input input-rect" type="password" id="newpass" name="newpass" style="width: 612px" maxlength="100" placeholder="새로운 비밀번호"/>
 			</div>
 			<div style="text-align: center; margin-top: 45px;" id="passBtn">
-				<a href="#" class="btn btn-gray btn-small" onclick='javascript:changePasswd();'>변경</a>
-				<a href="#" class="btn btn-gray btn-small" onclick='javascript:passwdModal.hide();'>Close</a>
+				<a href="#" class="btn btn-gray btn-small" onclick='changePasswd();'>변경</a>
+				<a href="#" class="btn btn-gray btn-small" onclick='passwdModal.hide();'>Close</a>
 			</div>
 		</div>
 	</div>
@@ -149,7 +149,7 @@
 			<table>
 				<tr>
 					<td>
-						<select id="type" style="height: 28px;">
+						<select title="타입선" id="type" style="height: 28px;">
 							<option value="1">업무관련</option>
 							<option value="2">기타</option>
 							<option value="3">휴가/연차</option>
@@ -212,7 +212,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td style="border-spacing: 0px;border-collapse: 0px;border: 1px solid #BEBeBe;">
+					<td style="border-spacing: 0;border: 1px solid #BEBeBe;">
 						<span id="schedulefileName"></span>
 						<div id="scheduleFiles">
 							<input type="file" name="schedulefile" id="schedulefile"><br>
@@ -221,8 +221,8 @@
 					</td>
 				</tr>
 				<tr>
-					<td style="border-spacing: 0px;border-collapse: 0px;height:25px;border: 1px solid #BEBeBe;">
-						공유 여부 : <input type="checkbox" id="etcYn"><font color="red">(체크시 Etc 에 표시 되지 않습니다.)</font>
+					<td style="border-spacing: 0;height:25px;border: 1px solid #BEBeBe;">
+						공유 여부 : <input type="checkbox" title="체크" id="etcYn"><span style="color: red;">(체크시 Etc 에 표시 되지 않습니다.)</span>
 					</td>
 				</tr>
 				<tr>
@@ -250,7 +250,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td style="border-spacing: 0px;border-collapse: 0px;border: 1px solid #BEBeBe;">
+					<td style="border-spacing: 0;border: 1px solid #BEBeBe;">
 						To : <span id="mailTo"></span><br><br>
 						C.C : <div id="cclist" style="width: 612px;"></div>
 						<ul class="tree_1 tree tree-arrow"></ul>
@@ -263,7 +263,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td style="border-spacing: 0px;border-collapse: 0px;border: 1px solid #BEBeBe;">
+					<td style="border-spacing: 0;border: 1px solid #BEBeBe;">
 						<span id="fileName"></span>
 						<div id="mailFiles">
 							<input type="file" name="mailfile" id="mailfile"><br>
@@ -272,8 +272,8 @@
 					</td>
 				</tr>
 				<tr>
-					<td style="border-spacing: 0px;border-collapse: 0px;border: 1px solid #BEBeBe;">
-						<font color="red">메일 전송</font> : <input type="checkbox" id="mail-yn" name="mail-yn"/>(체크시 작성한 내용이 메일로 발송됩니다.)<br>
+					<td style="border-spacing: 0;border: 1px solid #BEBeBe;">
+						<span style="color: red;">메일 전송</span> : <input type="checkbox" title="mailcheck" id="mail-yn" name="mail-yn"/>(체크시 작성한 내용이 메일로 발송됩니다.)<br>
 					</td>
 				</tr>
 				<tr>
@@ -316,11 +316,11 @@
 						이&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;름 : <input class="input input-rect" type="text" id="user-name" name="user-name" maxlength="100" placeholder="이름"/><br>
 						메일주소 : <input class="input input-rect" type="email" id="user-email" name="user-email" maxlength="100" placeholder="id@host.com"/><br>
 						전화번호 : <input class="input input-rect" type="text" id="user-phone" name="user-phone" maxlength="100" placeholder="전화번호"/><br>
-						<font color="red">(최초 비밀번호는 123456입니다.)</font><br>
+						<span style="color: red;">(최초 비밀번호는 123456입니다.)</span><br>
 					</div>
 					<div style="text-align: center; margin-bottom: 5px;">
 						<a href="#" class="btn btn-gray btn-small" id="addUserBtn">추가</a>
-						<a href="#" class="btn btn-gray btn-small" onclick='javascript:userModal.hide();'>Close</a>
+						<a href="#" class="btn btn-gray btn-small" onclick='userModal.hide();'>Close</a>
 					</div>
 				</div>
 				
@@ -339,13 +339,13 @@
 					<li value="5">메일주소</li>
 				</ul>
 			</div>
-			<input class="input input-rect" id="eText"><a class="btn btn-gray" id="employeeSearch">검색</a>
+			<input class="input input-rect" title="검" id="eText"><a class="btn btn-gray" id="employeeSearch">검색</a>
 	    </div>
 	    <div class="user-work notify">
 			<div style="width: 90%;height:90%;margin: 10px auto;">
 				<div class="group">
 					<a class="btn btn-mini btn-gray-black" id="work-email"><span id="work-name"></span>&nbsp;<i class="icon-document"></i></a>
-					<a class="right btn btn-mini btn-gray-black" id="work-refresh"><spa침n>새로고침</spa침n>&nbsp;<i class="icon-refresh"></i></a>
+					<a class="right btn btn-mini btn-gray-black" id="work-refresh"><span>새로고침</span>&nbsp;<i class="icon-refresh"></i></a>
 				</div>
 				<table id="userArticle" class="table table-classic" style="width: 100%;margin-top: 5px;">
 					<colgroup>
@@ -538,7 +538,7 @@ function getContextPath(){
     		month: '2-digit',
     		day:'2-digit'
     	},
-    	view: {
+    	views: {
     		dayGrid :{
     			titleFormat: {
     	    		year:'numeric',
@@ -602,7 +602,7 @@ function getContextPath(){
 						var etime = edate.getFullYear() + "년 " + (edate.getMonth()+1) + "월 " + edate.getDate() + "일";
 						var fileHtml = '<div class="notify" style="margin-top:5px;">';
 						for(var i = 0 ; i < files.length ; i ++){
-							fileHtml += '&nbsp;&nbsp;<a href="javascript:scheduleFileDown('+files[i].seq+')">' + files[i].realname +'</a>&nbsp;&nbsp;';
+							fileHtml += '&nbsp;&nbsp;<a href="scheduleFileDown('+files[i].seq+')">' + files[i].realname +'</a>&nbsp;&nbsp;';
 						}
 						fileHtml += '</div>';
 						$("#modal-contents").html('<div class="label label-red" style="min-width:300px;">' + stime + ' ~ ' + etime + '</div><br><div class="notify contents-view" style="margin-top:5px;">' + article.contents +'</div>'+fileHtml);
@@ -614,7 +614,7 @@ function getContextPath(){
 											    id: 'updateBtn',
 											    html: '수정',
 											    addClass : 'btn btn-gray btn-small',
-											    onclick: 'javascript:contentsUpdate();'
+											    onclick: 'contentsUpdate();'
 											});
 							var deleteBtn = $('<a/>', {
 											    href: '#',
@@ -622,7 +622,7 @@ function getContextPath(){
 											    id: 'deleteBtn',
 											    html: '삭제',
 											    addClass : 'btn btn-gray btn-small',
-											    onclick: 'javascript:contentsDelete('+article.seq+');'
+											    onclick: 'contentsDelete('+article.seq+');'
 											});
 							var closeBtn = $('<a/>', {
 											    href: '#',
@@ -630,7 +630,7 @@ function getContextPath(){
 											    id: 'closeBtn',
 											    html: 'Close',
 											    addClass : 'btn btn-gray btn-small',
-											    onclick: 'javascript:modal.hide();'
+											    onclick: 'modal.hide();'
 											});
 							
 							$('#contentsBtn').html( updateBtn[0].outerHTML +  deleteBtn[0].outerHTML +  closeBtn[0].outerHTML);
@@ -642,7 +642,7 @@ function getContextPath(){
 							    id: 'closeBtn',
 							    html: 'Close',
 							    addClass : 'btn btn-gray btn-small',
-							    onclick: 'javascript:modal.hide();'
+							    onclick: 'modal.hide();'
 							});
 			
 							$('#contentsBtn').html( closeBtn[0].outerHTML);

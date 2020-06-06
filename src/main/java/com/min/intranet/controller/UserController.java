@@ -48,7 +48,7 @@ public class UserController {
 	public String loginPage(Locale locale, Model model, Authentication auth) {
 		logger.info("Welcome loginPage! The client locale is {}.", locale);
 		if (auth != null && auth.isAuthenticated())
-			return "/home/main";
+			return "/home/mainN";
 		else
 			return "/user/loginPage";
 	}
